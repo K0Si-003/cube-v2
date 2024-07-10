@@ -39,7 +39,6 @@ export default function Ball() {
               );
             }
 
-            console.log(target)
           }}
     >
         <mesh castShadow>
