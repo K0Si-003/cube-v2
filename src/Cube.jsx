@@ -1,7 +1,8 @@
 import * as THREE from 'three'
-import { useGLTF } from '@react-three/drei'
+import { useGLTF, useKeyboardControls } from '@react-three/drei'
 import { RigidBody } from '@react-three/rapier'
 import { useRef } from 'react'
+import { useFrame } from '@react-three/fiber'
 
 export default function Cube() {
     const cube = useRef()
@@ -21,13 +22,118 @@ export default function Cube() {
 
     const { nodes } = useGLTF('./meshes/cube.glb')
 
+    const [subscribeKeys, getKeys] = useKeyboardControls()
+
+    useFrame((state, delta) => {
+        /**
+         * Controls
+         */
+        const { forward, backward, leftward, rightward } = getKeys()
+
+        if (forward) {
+            const levelObj = state.scene.children.find(
+                (item) => item.name === 'level'
+            )
+            const lastRotationState = {
+                x: levelObj.rotation.x,
+                y: levelObj.rotation.y,
+                z: levelObj.rotation.z,
+            }
+
+            const rotation = new THREE.Quaternion()
+            rotation.setFromEuler(
+                new THREE.Euler(
+                    lastRotationState.x - 0.01,
+                    lastRotationState.y,
+                    lastRotationState.z
+                )
+            )
+
+            if (cube.current) {
+                cube.current.setNextKinematicRotation(rotation)
+            }
+        }
+
+        if (backward) {
+            const levelObj = state.scene.children.find(
+                (item) => item.name === 'level'
+            )
+            const lastRotationState = {
+                x: levelObj.rotation.x,
+                y: levelObj.rotation.y,
+                z: levelObj.rotation.z,
+            }
+
+            const rotation = new THREE.Quaternion()
+            rotation.setFromEuler(
+                new THREE.Euler(
+                    lastRotationState.x + 0.01,
+                    lastRotationState.y,
+                    lastRotationState.z
+                )
+            )
+
+            if (cube.current) {
+                cube.current.setNextKinematicRotation(rotation)
+            }
+        }
+
+        if (leftward) {
+            const levelObj = state.scene.children.find(
+                (item) => item.name === 'level'
+            )
+            const lastRotationState = {
+                x: levelObj.rotation.x,
+                y: levelObj.rotation.y,
+                z: levelObj.rotation.z,
+            }
+
+            const rotation = new THREE.Quaternion()
+            rotation.setFromEuler(
+                new THREE.Euler(
+                    lastRotationState.x,
+                    lastRotationState.y,
+                    lastRotationState.z + 0.01
+                )
+            )
+
+            if (cube.current) {
+                cube.current.setNextKinematicRotation(rotation)
+            }
+        }
+
+        if (rightward) {
+            const levelObj = state.scene.children.find(
+                (item) => item.name === 'level'
+            )
+            const lastRotationState = {
+                x: levelObj.rotation.x,
+                y: levelObj.rotation.y,
+                z: levelObj.rotation.z,
+            }
+
+            const rotation = new THREE.Quaternion()
+            rotation.setFromEuler(
+                new THREE.Euler(
+                    lastRotationState.x,
+                    lastRotationState.y,
+                    lastRotationState.z - 0.01
+                )
+            )
+
+            if (cube.current) {
+                cube.current.setNextKinematicRotation(rotation)
+            }
+        }
+    })
+
     return (
         <RigidBody
             ref={cube}
             type="kinematicPosition"
             colliders="trimesh"
             name="level"
-            position={[0, 0, 0]}
+            position={[-5, 0, 0]}
             restitution={0.2}
             friction={0}
         >
