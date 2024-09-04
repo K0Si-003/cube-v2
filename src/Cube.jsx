@@ -27,18 +27,21 @@ export default function Cube() {
         /**
          * Controls
          */
+        // Getkeys state
         const { forward, backward, leftward, rightward } = getKeys()
 
-        if (forward) {
-            const levelObj = state.scene.children.find(
-                (item) => item.name === 'level'
-            )
-            const lastRotationState = {
-                x: levelObj.rotation.x,
-                y: levelObj.rotation.y,
-                z: levelObj.rotation.z,
-            }
+        // Get Cube Rotation state
+        const levelObj = state.scene.children.find(
+            (item) => item.name === 'level'
+        )
+        const lastRotationState = {
+            x: levelObj.rotation.x,
+            y: levelObj.rotation.y,
+            z: levelObj.rotation.z,
+        }
 
+        // Update cube rotation depends keys pressed
+        if (forward) {
             const rotation = new THREE.Quaternion()
             rotation.setFromEuler(
                 new THREE.Euler(
@@ -54,15 +57,6 @@ export default function Cube() {
         }
 
         if (backward) {
-            const levelObj = state.scene.children.find(
-                (item) => item.name === 'level'
-            )
-            const lastRotationState = {
-                x: levelObj.rotation.x,
-                y: levelObj.rotation.y,
-                z: levelObj.rotation.z,
-            }
-
             const rotation = new THREE.Quaternion()
             rotation.setFromEuler(
                 new THREE.Euler(
@@ -76,6 +70,7 @@ export default function Cube() {
                 cube.current.setNextKinematicRotation(rotation)
             }
         }
+        
         if (leftward) {
             const rotation = new THREE.Quaternion()
             rotation.setFromEuler(
@@ -90,6 +85,7 @@ export default function Cube() {
                 cube.current.setNextKinematicRotation(rotation)
             }
         }
+        
         if (rightward) {
             const rotation = new THREE.Quaternion()
             rotation.setFromEuler(
