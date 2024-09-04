@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import { RigidBody } from '@react-three/rapier'
 import { useFrame } from '@react-three/fiber'
+import * as THREE from 'three'
 
 export default function Ball() {
     const ball = useRef()
@@ -8,8 +9,6 @@ export default function Ball() {
     const [isAsleep, setIsAsleep] = useState(false)
     const [smoothCameraPosition] = useState(() => new THREE.Vector3(0, 50, 25))
     const [smoothCameraTarget] = useState(() => new THREE.Vector3())
-
-    const state = useThree()
 
     if (ball.current) {
         const bodyPosition = ball.current.translation()
