@@ -1,7 +1,6 @@
 import { useRef, useState } from 'react'
 import { RigidBody } from '@react-three/rapier'
-import { useFrame, useThree } from '@react-three/fiber'
-import * as THREE from 'three'
+import { useFrame } from '@react-three/fiber'
 
 export default function Ball() {
     const ball = useRef()

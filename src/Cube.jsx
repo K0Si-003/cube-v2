@@ -11,7 +11,6 @@ export default function Cube() {
         color: '#459E15',
         metalness: '0.5',
         roughness: '1',
-        // wireframe: true
         transparent: true,
         opacity: '0.5',
     })
@@ -77,17 +76,7 @@ export default function Cube() {
                 cube.current.setNextKinematicRotation(rotation)
             }
         }
-
         if (leftward) {
-            const levelObj = state.scene.children.find(
-                (item) => item.name === 'level'
-            )
-            const lastRotationState = {
-                x: levelObj.rotation.x,
-                y: levelObj.rotation.y,
-                z: levelObj.rotation.z,
-            }
-
             const rotation = new THREE.Quaternion()
             rotation.setFromEuler(
                 new THREE.Euler(
@@ -101,17 +90,7 @@ export default function Cube() {
                 cube.current.setNextKinematicRotation(rotation)
             }
         }
-
         if (rightward) {
-            const levelObj = state.scene.children.find(
-                (item) => item.name === 'level'
-            )
-            const lastRotationState = {
-                x: levelObj.rotation.x,
-                y: levelObj.rotation.y,
-                z: levelObj.rotation.z,
-            }
-
             const rotation = new THREE.Quaternion()
             rotation.setFromEuler(
                 new THREE.Euler(
