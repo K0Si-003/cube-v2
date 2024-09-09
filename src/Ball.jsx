@@ -10,11 +10,6 @@ export default function Ball() {
     const [smoothCameraPosition] = useState(() => new THREE.Vector3(0, 50, 25))
     const [smoothCameraTarget] = useState(() => new THREE.Vector3())
 
-    if (ball.current) {
-        const bodyPosition = ball.current.translation()
-        console.log(state.camera, bodyPosition)
-    }
-
     useFrame((state, delta) => {
         /**
          * Camera
