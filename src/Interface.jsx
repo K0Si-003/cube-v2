@@ -21,9 +21,6 @@ export default function Interface() {
                     <div className={`key ${backward ? 'active' : ''}`}></div>
                     <div className={`key ${rightward ? 'active' : ''}`}></div>
                 </div>
-                <div className="raw">
-                    <div className={`key large ${jump ? 'active' : ''}`}></div>
-                </div>
             </div>
         </div>
     )
