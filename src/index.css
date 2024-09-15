@@ -20,6 +20,10 @@ body,
     font-family: 'Bebas Neue', cursive;
 }
 
+.map img{
+    width: 150px;
+}
+
 /**
 * Controls
 */

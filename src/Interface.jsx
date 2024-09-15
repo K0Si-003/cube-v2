@@ -11,6 +11,9 @@ export default function Interface() {
     return (
         <div className="interface">
             <p>{text}</p>
+            <div className="map">
+                <img loading="lazy" src="images/lvl-1.png" alt="map" />
+            </div>
             {/* Controls */}
             <div className="controls">
                 <div className="raw">
