@@ -7,7 +7,7 @@ import { Perf } from 'r3f-perf'
 
 export default function Experience() {
     return (
-        <Physics>
+        <Physics debug={false}>
             {/* <OrbitControls makeDefault /> */}
             <Lights />
             <Cube />

@@ -5,8 +5,23 @@ import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 
 export default function Cube() {
-    const cube = useRef()
+    const cube = useRef([])
 
+    /**
+     * Import/Assign Meshes
+     */
+    const { nodes } = useGLTF('./meshes/cube.glb')
+    let cubeArray = []
+    for (let key in nodes) {
+        if (nodes.hasOwnProperty(key)) {
+            cubeArray.push(nodes[key])
+        }
+    }
+    cubeArray = cubeArray.slice(1)
+
+    /**
+     * Material
+     */
     const boxMaterial = new THREE.MeshStandardMaterial({
         color: '#459E15',
         metalness: '0.5',
@@ -19,8 +34,6 @@ export default function Cube() {
         color: '#101010',
     })
 
-    const { nodes } = useGLTF('./meshes/cube.glb')
-
     const [subscribeKeys, getKeys] = useKeyboardControls()
 
     useFrame((state, delta) => {
@@ -31,8 +44,8 @@ export default function Cube() {
         const { forward, backward, leftward, rightward } = getKeys()
 
         // Get Cube Rotation state
-        const levelObj = state.scene.children.find(
-            (item) => item.name === 'level'
+        const levelObj = state.scene.children.find((item) =>
+            item.name.startsWith('level')
         )
         const lastRotationState = {
             x: levelObj.rotation.x,
@@ -52,7 +65,9 @@ export default function Cube() {
             )
 
             if (cube.current) {
-                cube.current.setNextKinematicRotation(rotation)
+                for (let i = 0; i < cube.current.length; i++) {
+                    cube.current[i].setNextKinematicRotation(rotation)
+                }
             }
         }
 
@@ -67,10 +82,12 @@ export default function Cube() {
             )
 
             if (cube.current) {
-                cube.current.setNextKinematicRotation(rotation)
+                for (let i = 0; i < cube.current.length; i++) {
+                    cube.current[i].setNextKinematicRotation(rotation)
+                }
             }
         }
-        
+
         if (leftward) {
             const rotation = new THREE.Quaternion()
             rotation.setFromEuler(
@@ -82,10 +99,12 @@ export default function Cube() {
             )
 
             if (cube.current) {
-                cube.current.setNextKinematicRotation(rotation)
+                for (let i = 0; i < cube.current.length; i++) {
+                    cube.current[i].setNextKinematicRotation(rotation)
+                }
             }
         }
-        
+
         if (rightward) {
             const rotation = new THREE.Quaternion()
             rotation.setFromEuler(
@@ -97,60 +116,42 @@ export default function Cube() {
             )
 
             if (cube.current) {
-                cube.current.setNextKinematicRotation(rotation)
+                for (let i = 0; i < cube.current.length; i++) {
+                    cube.current[i].setNextKinematicRotation(rotation)
+                }
             }
         }
     })
 
     return (
-        <RigidBody
-            ref={cube}
-            type="kinematicPosition"
-            colliders="trimesh"
-            name="level"
-            position={[-5, 0, 0]}
-            restitution={0.2}
-            friction={0}
-        >
-            <group scale={[0.2, 0.2, 0.2]}>
-                <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Top.geometry}
-                    material={boxMaterial}
-                />
-                <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Level1.geometry}
-                    material={levelMaterial}
-                />
-                <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Level2.geometry}
-                    material={levelMaterial}
-                />
-                <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Level3.geometry}
-                    material={levelMaterial}
-                />
-                <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Level4.geometry}
-                    material={levelMaterial}
-                />
-                <mesh
-                    castShadow
-                    receiveShadow
-                    geometry={nodes.Bottom.geometry}
-                    material={boxMaterial}
-                />
-            </group>
-        </RigidBody>
+        <>
+            {cubeArray.map((cubePart, id) => {
+                return (
+                    <RigidBody
+                        key={cubePart.name}
+                        ref={(cubePart) => (cube.current[id] = cubePart)}
+                        type="kinematicPosition"
+                        colliders="trimesh"
+                        name={`level-${cubePart.name}`}
+                        position={[-5, 0, 0]}
+                        scale={[0.2, 0.2, 0.2]}
+                        restitution={0.2}
+                        friction={0}
+                    >
+                        <mesh
+                            castShadow
+                            receiveShadow
+                            geometry={cubePart.geometry}
+                            material={
+                                cubePart.name.startsWith('Level')
+                                    ? levelMaterial
+                                    : boxMaterial
+                            }
+                        />
+                    </RigidBody>
+                )
+            })}
+        </>
     )
 }
 
