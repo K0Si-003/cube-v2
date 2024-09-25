@@ -6,18 +6,13 @@ import { useFrame } from '@react-three/fiber'
 
 export default function Cube() {
     const cube = useRef([])
+    const [subscribeKeys, getKeys] = useKeyboardControls()
 
     /**
      * Import/Assign Meshes
      */
     const { nodes } = useGLTF('./meshes/cube.glb')
-    let cubeArray = []
-    for (let key in nodes) {
-        if (nodes.hasOwnProperty(key)) {
-            cubeArray.push(nodes[key])
-        }
-    }
-    cubeArray = cubeArray.slice(1)
+    const cubeArray = Object.values(nodes).slice(1)
 
     /**
      * Material
@@ -34,8 +29,6 @@ export default function Cube() {
         color: '#101010',
     })
 
-    const [subscribeKeys, getKeys] = useKeyboardControls()
-
     useFrame((state, delta) => {
         /**
          * Controls
@@ -45,7 +38,7 @@ export default function Cube() {
 
         // Get Cube Rotation state
         const levelObj = state.scene.children.find((item) =>
-            item.name.startsWith('level')
+            item.name.startsWith('cube')
         )
         const lastRotationState = {
             x: levelObj.rotation.x,
@@ -132,7 +125,7 @@ export default function Cube() {
                         ref={(cubePart) => (cube.current[id] = cubePart)}
                         type="kinematicPosition"
                         colliders="trimesh"
-                        name={`level-${cubePart.name}`}
+                        name={`cube${cubePart.name}`}
                         position={[-5, 0, 0]}
                         scale={[0.2, 0.2, 0.2]}
                         restitution={0.2}

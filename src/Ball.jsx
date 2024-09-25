@@ -1,14 +1,29 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { RigidBody } from '@react-three/rapier'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
+import useGame from './store/useGame.js'
 
 export default function Ball() {
     const ball = useRef()
 
+    const [levelPosition, setLevelPosition] = useState(null)
+
     const [isAsleep, setIsAsleep] = useState(false)
+
     const [smoothCameraPosition] = useState(() => new THREE.Vector3(0, 50, 25))
     const [smoothCameraTarget] = useState(() => new THREE.Vector3())
+
+    // Store data
+    const changePosition = useGame((state) => state.changePosition)
+
+    useEffect(() => {
+        // Timer to not send bounce collision to Store
+        const timer = setTimeout(() => {
+            changePosition(levelPosition)
+        }, 1000)
+        return () => clearTimeout(timer)
+    }, [levelPosition])
 
     useFrame((state, delta) => {
         /**
@@ -21,7 +36,7 @@ export default function Ball() {
             cameraPosition.copy(bodyPosition)
             cameraPosition.z += 30
             cameraPosition.y += 25
-            
+
             const cameraTarget = new THREE.Vector3()
             cameraTarget.copy(bodyPosition)
             cameraTarget.y += 0
@@ -47,20 +62,12 @@ export default function Ball() {
             friction={1}
             linearDamping={0.1}
             angularDamping={0.1}
-            onCollisionEnter={({ manifold, target, other }) => {
-                // console.log(
-                //   "Collision at world position ",
-                //   manifold.solverContactPoint(0)
-                // );
-
-                if (other.rigidBodyObject) {
-                    console.log(
-                        // this rigid body's Object3D
-                        target.rigidBodyObject.name,
-                        ' collided with ',
-                        // the other rigid body's Object3D
-                        other.rigidBodyObject.name
-                    )
+            onCollisionEnter={(other) => {
+                if (
+                    other.rigidBodyObject.name.includes('Level') ||
+                    other.rigidBodyObject.name.includes('Bottom')
+                ) {
+                    setLevelPosition(other.rigidBodyObject.name)
                 }
             }}
         >
