@@ -1,41 +1,67 @@
-import { useEffect, useState } from "react"
-import { useKeyboardControls  } from "@react-three/drei"
-import useGame from "./store/useGame.js"
+import { useEffect, useState } from 'react'
+import { useKeyboardControls } from '@react-three/drei'
+import useGame from './store/useGame.js'
 
 export default function Interface() {
-    // Get pressed keyboard touch
+    /**
+     * Controls
+     */
     const forward = useKeyboardControls((state) => state.forward)
     const backward = useKeyboardControls((state) => state.backward)
     const leftward = useKeyboardControls((state) => state.leftward)
     const rightward = useKeyboardControls((state) => state.rightward)
 
-    // Set maps img src from store
+    /**
+     * Map
+     */
+    const images = [
+        '/images/lvl-1.png',
+        '/images/lvl-2.png',
+        '/images/lvl-3.png',
+        '/images/lvl-4.png',
+        '/images/bottom.png',
+    ]
+
     const ballPosition = useGame((state) => state.ballPosition)
-    const [imageSrc, setImageSrc] = useState(ballPosition)
+    const [activLevel, setActivLevel] = useState(0)
+
+    const getActivLevel = () => {
+        switch (ballPosition) {
+            case 'cubeLevel1':
+                return 0
+            case 'cubeLevel2':
+                return 1
+            case 'cubeLevel3':
+                return 2
+            case 'cubeLevel4':
+                return 3
+            case 'cubeBottom':
+                return 4
+            default:
+                return 0
+        }
+    }
+
     useEffect(() => {
-        const getImageSrc = () => {
-            switch (ballPosition) {
-              case 'cubeLevel1':
-                return '/images/lvl-1.png';
-              case 'cubeLevel2':
-                return '/images/lvl-2.png';
-              case 'cubeLevel3':
-                return '/images/lvl-3.png';
-              case 'cubeLevel4':
-                return '/images/lvl-4.png';
-              case 'cubeBottom':
-                return '/images/bottom.png';
-              default:
-                return '/images/lvl-1.png';
-            }
-          };
-        setImageSrc(getImageSrc())
+        setActivLevel(getActivLevel())
     }, [ballPosition])
 
     return (
         <div className="interface">
             <div className="map">
-                <img loading="lazy" src={imageSrc} alt="map" />
+                {images.map((image, index) => {
+                    return (
+                        <img
+                            loading="lazy"
+                            key={index}
+                            src={image}
+                            alt="map"
+                            className={`map--level ${
+                                activLevel === index ? 'active' : ''
+                            }`}
+                        />
+                    )
+                })}
             </div>
             <div className="controls">
                 <div className="raw">

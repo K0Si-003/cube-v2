@@ -21,7 +21,7 @@ export default function Ball() {
         // Timer to not send bounce collision to Store
         const timer = setTimeout(() => {
             changePosition(levelPosition)
-        }, 1000)
+        }, 500)
         return () => clearTimeout(timer)
     }, [levelPosition])
 
