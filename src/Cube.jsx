@@ -81,8 +81,8 @@ export default function Cube() {
         // Rotate cube depending keys pressed
         if (forward) updateRotation('x', -1)
         if (backward) updateRotation('x', 1)
-        if (leftward) updateRotation('z', -1)
-        if (rightward) updateRotation('z', 1)
+        if (leftward) updateRotation('z', 1)
+        if (rightward) updateRotation('z', -1)
 
         /**
          * Helpers
