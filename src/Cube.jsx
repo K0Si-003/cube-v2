@@ -1,12 +1,15 @@
 import * as THREE from 'three'
 import { useGLTF, useKeyboardControls } from '@react-three/drei'
 import { RigidBody } from '@react-three/rapier'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
 
 export default function Cube() {
     const cube = useRef([])
     const [subscribeKeys, getKeys] = useKeyboardControls()
+    
+    const [ transparency, setTransparency ] = useState(false)
+    const [ isWireframe, setIsWireframe ] = useState(false)
 
     /**
      * Import/Assign Meshes
@@ -21,12 +24,13 @@ export default function Cube() {
         color: '#459E15',
         metalness: '0.5',
         roughness: '1',
-        transparent: true,
+        transparent: transparency,
         opacity: '0.5',
     })
 
     const levelMaterial = new THREE.MeshStandardMaterial({
         color: '#101010',
+        wireframe: isWireframe
     })
 
     useFrame((state, delta) => {
@@ -34,7 +38,7 @@ export default function Cube() {
          * Controls
          */
         // Getkeys state
-        const { forward, backward, leftward, rightward } = getKeys()
+        const { forward, backward, leftward, rightward, transparent, wireframe } = getKeys()
 
         // Get Cube Rotation state
         const levelObj = state.scene.children.find((item) =>
@@ -113,6 +117,19 @@ export default function Cube() {
                     cube.current[i].setNextKinematicRotation(rotation)
                 }
             }
+        }
+
+        if (transparent) {
+            setTransparency(true);
+        } else {
+            setTransparency(false);
+        }
+
+        if (wireframe) {
+            console.log('wireframe')
+            setIsWireframe(true);
+        } else {
+            setIsWireframe(false);
         }
     })
 

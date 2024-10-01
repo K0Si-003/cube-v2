@@ -16,6 +16,8 @@ root.render(
                 { name: 'backward', keys: ['ArrowDown', 'KeyS'] },
                 { name: 'leftward', keys: ['ArrowLeft', 'KeyA'] },
                 { name: 'rightward', keys: ['ArrowRight', 'KeyD'] },
+                { name:'transparent', keys:['Shift'] },
+                { name:'wireframe', keys:['Control'] }
             ]}
         >
             <Canvas
