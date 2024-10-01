@@ -7,9 +7,9 @@ import { useFrame } from '@react-three/fiber'
 export default function Cube() {
     const cube = useRef([])
     const [subscribeKeys, getKeys] = useKeyboardControls()
-    
-    const [ transparency, setTransparency ] = useState(false)
-    const [ isWireframe, setIsWireframe ] = useState(false)
+
+    const [transparency, setTransparency] = useState(false)
+    const [isWireframe, setIsWireframe] = useState(false)
 
     /**
      * Import/Assign Meshes
@@ -30,17 +30,24 @@ export default function Cube() {
 
     const levelMaterial = new THREE.MeshStandardMaterial({
         color: '#101010',
-        wireframe: isWireframe
+        wireframe: isWireframe,
     })
 
     useFrame((state, delta) => {
-        /**
-         * Controls
-         */
-        // Getkeys state
-        const { forward, backward, leftward, rightward, transparent, wireframe } = getKeys()
+        // Getkeys state for controls
+        const {
+            forward,
+            backward,
+            leftward,
+            rightward,
+            transparent,
+            wireframe,
+        } = getKeys()
 
-        // Get Cube Rotation state
+        /**
+         * Cube rotation
+         */
+        // Get preview cube rotation
         const levelObj = state.scene.children.find((item) =>
             item.name.startsWith('cube')
         )
@@ -50,14 +57,17 @@ export default function Cube() {
             z: levelObj.rotation.z,
         }
 
-        // Update cube rotation depends keys pressed
-        if (forward) {
+        // Function to rotate cube
+        const updateRotation = (axis, direction) => {
             const rotation = new THREE.Quaternion()
             rotation.setFromEuler(
                 new THREE.Euler(
-                    lastRotationState.x - 0.01,
-                    lastRotationState.y,
-                    lastRotationState.z
+                    lastRotationState.x +
+                        direction * 0.01 * (axis === 'x' ? 1 : 0),
+                    lastRotationState.y +
+                        direction * 0.01 * (axis === 'y' ? 1 : 0),
+                    lastRotationState.z +
+                        direction * 0.01 * (axis === 'z' ? 1 : 0)
                 )
             )
 
@@ -68,68 +78,28 @@ export default function Cube() {
             }
         }
 
-        if (backward) {
-            const rotation = new THREE.Quaternion()
-            rotation.setFromEuler(
-                new THREE.Euler(
-                    lastRotationState.x + 0.01,
-                    lastRotationState.y,
-                    lastRotationState.z
-                )
-            )
+        // Rotate cube depending keys pressed
+        if (forward) updateRotation('x', -1)
+        if (backward) updateRotation('x', 1)
+        if (leftward) updateRotation('z', -1)
+        if (rightward) updateRotation('z', 1)
 
-            if (cube.current) {
-                for (let i = 0; i < cube.current.length; i++) {
-                    cube.current[i].setNextKinematicRotation(rotation)
-                }
-            }
-        }
-
-        if (leftward) {
-            const rotation = new THREE.Quaternion()
-            rotation.setFromEuler(
-                new THREE.Euler(
-                    lastRotationState.x,
-                    lastRotationState.y,
-                    lastRotationState.z + 0.01
-                )
-            )
-
-            if (cube.current) {
-                for (let i = 0; i < cube.current.length; i++) {
-                    cube.current[i].setNextKinematicRotation(rotation)
-                }
-            }
-        }
-
-        if (rightward) {
-            const rotation = new THREE.Quaternion()
-            rotation.setFromEuler(
-                new THREE.Euler(
-                    lastRotationState.x,
-                    lastRotationState.y,
-                    lastRotationState.z - 0.01
-                )
-            )
-
-            if (cube.current) {
-                for (let i = 0; i < cube.current.length; i++) {
-                    cube.current[i].setNextKinematicRotation(rotation)
-                }
-            }
-        }
-
+        /**
+         * Helpers
+         */
+        // Set boxMaterial transparent
         if (transparent) {
-            setTransparency(true);
+            setTransparency(true)
         } else {
-            setTransparency(false);
+            setTransparency(false)
         }
 
+        // Set levelMaterial wireframe
         if (wireframe) {
             console.log('wireframe')
-            setIsWireframe(true);
+            setIsWireframe(true)
         } else {
-            setIsWireframe(false);
+            setIsWireframe(false)
         }
     })
 
