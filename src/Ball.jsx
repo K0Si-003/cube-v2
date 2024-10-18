@@ -34,8 +34,8 @@ export default function Ball() {
 
             const cameraPosition = new THREE.Vector3()
             cameraPosition.copy(bodyPosition)
-            cameraPosition.z += 30
-            cameraPosition.y += 25
+            cameraPosition.z += 45
+            cameraPosition.y += 35
 
             const cameraTarget = new THREE.Vector3()
             cameraTarget.copy(bodyPosition)

@@ -45,33 +45,33 @@ export default function Cube() {
 
         tl.current.from(
             meshes.current[0].current.position,
-            { duration: 5, y: 150, ease: 'slow(0.7,0.7,false)'},
-            0
+            { duration: 2.5, y: 150, ease: 'slow(0.7,0.7,false)'},
+            2
         )
         tl.current.from(
             meshes.current[1].current.position,
-            { duration: 5, y: -150, ease: 'slow(0.7,0.7,false)'},
+            { duration: 2.5, y: -150, ease: 'slow(0.7,0.7,false)'},
             0
         )
         tl.current.from(
             meshes.current[2].current.position,
-            { duration: 5, y: -150, ease: 'slow(0.7,0.7,false)'},
-            1
+            { duration: 2.5, y: -150, ease: 'slow(0.7,0.7,false)'},
+            0.2
         )
         tl.current.from(
             meshes.current[3].current.position,
-            { duration: 5, y: -150, ease: 'slow(0.7,0.7,false)'},
-            2
+            { duration: 2.5, y: -150, ease: 'slow(0.7,0.7,false)'},
+            0.4
         )
         tl.current.from(
             meshes.current[4].current.position,
-            { duration: 5, y: -150, ease: 'slow(0.7,0.7,false)'},
-            3
+            { duration: 2.5, y: -150, ease: 'slow(0.7,0.7,false)'},
+            0.6
         )
         tl.current.from(
             meshes.current[5].current.position,
-            { duration: 5, y: -150, ease: 'slow(0.7,0.7,false)'},
-            4
+            { duration: 2.5, y: -150, ease: 'slow(0.7,0.7,false)'},
+            1
         )
     }, [])
 
