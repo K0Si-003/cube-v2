@@ -1,8 +1,9 @@
 import * as THREE from 'three'
 import { useGLTF, useKeyboardControls } from '@react-three/drei'
 import { RigidBody } from '@react-three/rapier'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
+import gsap from 'gsap'
 
 export default function Cube() {
     const cube = useRef([])
@@ -32,6 +33,47 @@ export default function Cube() {
         color: '#101010',
         wireframe: isWireframe,
     })
+
+    /**
+     * Enter Animation
+     */
+    const tl = useRef() // timeline gsap
+    const meshes = useRef([]) // refs of meshes for animate each one
+
+    useEffect(() => {
+        tl.current = gsap.timeline()
+
+        tl.current.from(
+            meshes.current[0].current.position,
+            { duration: 5, y: 150, ease: 'slow(0.7,0.7,false)'},
+            0
+        )
+        tl.current.from(
+            meshes.current[1].current.position,
+            { duration: 5, y: -150, ease: 'slow(0.7,0.7,false)'},
+            0
+        )
+        tl.current.from(
+            meshes.current[2].current.position,
+            { duration: 5, y: -150, ease: 'slow(0.7,0.7,false)'},
+            1
+        )
+        tl.current.from(
+            meshes.current[3].current.position,
+            { duration: 5, y: -150, ease: 'slow(0.7,0.7,false)'},
+            2
+        )
+        tl.current.from(
+            meshes.current[4].current.position,
+            { duration: 5, y: -150, ease: 'slow(0.7,0.7,false)'},
+            3
+        )
+        tl.current.from(
+            meshes.current[5].current.position,
+            { duration: 5, y: -150, ease: 'slow(0.7,0.7,false)'},
+            4
+        )
+    }, [])
 
     useFrame((state, delta) => {
         // Getkeys state for controls
@@ -96,7 +138,6 @@ export default function Cube() {
 
         // Set levelMaterial wireframe
         if (wireframe) {
-            console.log('wireframe')
             setIsWireframe(true)
         } else {
             setIsWireframe(false)
@@ -106,6 +147,9 @@ export default function Cube() {
     return (
         <>
             {cubeArray.map((cubePart, id) => {
+                if (!meshes.current[id]) {
+                    meshes.current[id] = useRef()
+                }
                 return (
                     <RigidBody
                         key={cubePart.name}
@@ -119,6 +163,7 @@ export default function Cube() {
                         friction={0}
                     >
                         <mesh
+                            ref={meshes.current[id]}
                             castShadow
                             receiveShadow
                             geometry={cubePart.geometry}
