@@ -4,13 +4,19 @@ import { RigidBody } from '@react-three/rapier'
 import { useEffect, useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
 import gsap from 'gsap'
+import useGame from './store/useGame.js'
 
 export default function Cube() {
-    const cube = useRef([])
+    const cube = useRef([]) // ref for cube rotation
+    const meshes = useRef([]) // ref for meshes enter animation
+    const tl = useRef() // ref for timeline gsap
+
     const [subscribeKeys, getKeys] = useKeyboardControls()
 
     const [transparency, setTransparency] = useState(false)
     const [isWireframe, setIsWireframe] = useState(false)
+
+    const end = useGame((state) => state.end) // Get method to change phase in store
 
     /**
      * Import/Assign Meshes
@@ -37,41 +43,44 @@ export default function Cube() {
     /**
      * Enter Animation
      */
-    const tl = useRef() // timeline gsap
-    const meshes = useRef([]) // refs of meshes for animate each one
 
     useEffect(() => {
         tl.current = gsap.timeline()
 
         tl.current.from(
             meshes.current[0].current.position,
-            { duration: 2.5, y: 150, ease: 'slow(0.7,0.7,false)'},
-            2
+            { duration: 5, y: 150, ease: 'slow(0.7,0.7,false)' },
+            0
         )
         tl.current.from(
             meshes.current[1].current.position,
-            { duration: 2.5, y: -150, ease: 'slow(0.7,0.7,false)'},
+            { duration: 5, y: -150, ease: 'slow(0.7,0.7,false)' },
             0
         )
         tl.current.from(
             meshes.current[2].current.position,
-            { duration: 2.5, y: -150, ease: 'slow(0.7,0.7,false)'},
-            0.2
+            { duration: 5, y: -150, ease: 'slow(0.7,0.7,false)' },
+            1
         )
         tl.current.from(
             meshes.current[3].current.position,
-            { duration: 2.5, y: -150, ease: 'slow(0.7,0.7,false)'},
-            0.4
+            { duration: 5, y: -150, ease: 'slow(0.7,0.7,false)' },
+            2
         )
         tl.current.from(
             meshes.current[4].current.position,
-            { duration: 2.5, y: -150, ease: 'slow(0.7,0.7,false)'},
-            0.6
+            { duration: 5, y: -150, ease: 'slow(0.7,0.7,false)' },
+            3
         )
         tl.current.from(
             meshes.current[5].current.position,
-            { duration: 2.5, y: -150, ease: 'slow(0.7,0.7,false)'},
-            1
+            { duration: 5, y: -150, ease: 'slow(0.7,0.7,false)' },
+            3.5
+        )
+        tl.current.from(
+            meshes.current[6].current.position,
+            { duration: 5, y: -150, ease: 'slow(0.7,0.7,false)' },
+            4
         )
     }, [])
 
@@ -113,10 +122,8 @@ export default function Cube() {
                 )
             )
 
-            if (cube.current) {
-                for (let i = 0; i < cube.current.length; i++) {
-                    cube.current[i].setNextKinematicRotation(rotation)
-                }
+            for (let i = 0; i < cube.current.length; i++) {
+                cube.current[i].setNextKinematicRotation(rotation)
             }
         }
 
@@ -129,14 +136,14 @@ export default function Cube() {
         /**
          * Helpers
          */
-        // Set boxMaterial transparent
+        // // Set boxMaterial transparent
         if (transparent) {
             setTransparency(true)
         } else {
             setTransparency(false)
         }
 
-        // Set levelMaterial wireframe
+        // // Set levelMaterial wireframe
         if (wireframe) {
             setIsWireframe(true)
         } else {
@@ -150,6 +157,7 @@ export default function Cube() {
                 if (!meshes.current[id]) {
                     meshes.current[id] = useRef()
                 }
+
                 return (
                     <RigidBody
                         key={cubePart.name}
@@ -161,6 +169,14 @@ export default function Cube() {
                         scale={[0.2, 0.2, 0.2]}
                         restitution={0.2}
                         friction={0}
+                        onCollisionEnter={({ target }) => {
+                            if (
+                                cubePart.name === 'Finish' &&
+                                target.rigidBodyObject.name === 'cubeFinish'
+                            ) {
+                                end()
+                            }
+                        }}
                     >
                         <mesh
                             ref={meshes.current[id]}
