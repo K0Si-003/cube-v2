@@ -19,10 +19,26 @@ body,
     background-color: darkslategray;
     z-index: 1;
     opacity: 1;
-    transition: opacity 1s ease;
+    transition: opacity 2s ease;
+
+    .loader {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        font-size: 5em;
+        opacity: 1;
+        transition: opacity 0.5s ease;
+    }
 
     &.loaded {
+        .loader {
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
         opacity: 0;
+        transition: opacity 2s ease 0.5s;
     }
 }
 
