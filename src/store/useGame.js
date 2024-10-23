@@ -18,7 +18,23 @@ export default create(
             /**
              * Phases
              */
-            phase: 'playing',
+            phase: 'loading',
+
+            ready: () => {
+                set((state) => {
+                    if (state.phase === 'loading')
+                        return { phase: 'ready', startTime: Date.now() }
+                    return {}
+                })
+            },
+
+            start: () => {
+                set((state) => {
+                    if (state.phase === 'ready')
+                        return { phase: 'playing', startTime: Date.now() }
+                    return {}
+                })
+            },
 
             end: () => {
                 set((state) => {

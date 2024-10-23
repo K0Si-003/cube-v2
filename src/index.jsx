@@ -5,6 +5,7 @@ import Experience from './Experience.jsx'
 import { Canvas } from '@react-three/fiber'
 import { KeyboardControls } from '@react-three/drei'
 import Interface from './Interface.jsx'
+import Overlay from './Overlay.jsx'
 
 const root = ReactDOM.createRoot(document.querySelector('#root'))
 
@@ -16,8 +17,8 @@ root.render(
                 { name: 'backward', keys: ['ArrowDown', 'KeyS'] },
                 { name: 'leftward', keys: ['ArrowLeft', 'KeyA'] },
                 { name: 'rightward', keys: ['ArrowRight', 'KeyD'] },
-                { name:'transparent', keys:['Shift'] },
-                { name:'wireframe', keys:['Control'] }
+                { name: 'transparent', keys: ['Shift'] },
+                { name: 'wireframe', keys: ['Control'] },
             ]}
         >
             <Canvas
@@ -31,6 +32,7 @@ root.render(
             >
                 <Experience />
             </Canvas>
+            <Overlay />
             <Interface />
         </KeyboardControls>
     </React.StrictMode>
