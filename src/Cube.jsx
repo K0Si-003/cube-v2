@@ -7,8 +7,14 @@ import gsap from 'gsap'
 import useGame from './store/useGame.js'
 
 export default function Cube() {
+    /**
+     * Import/Assign Meshes
+     */
+    const { nodes } = useGLTF('./meshes/cube.glb')
+    const cubeArray = Object.values(nodes).slice(1)
+
     const cube = useRef([]) // ref for cube rotation
-    const meshes = useRef([]) // ref for meshes enter animation
+    const meshes = useRef(cubeArray.map(() => useRef())) // ref for meshes enter animation
     const tl = useRef() // ref for timeline gsap
 
     const [subscribeKeys, getKeys] = useKeyboardControls()
@@ -17,12 +23,6 @@ export default function Cube() {
     const [isWireframe, setIsWireframe] = useState(false)
 
     const end = useGame((state) => state.end) // Get method to change phase in store
-
-    /**
-     * Import/Assign Meshes
-     */
-    const { nodes } = useGLTF('./meshes/cube.glb')
-    const cubeArray = Object.values(nodes).slice(1)
 
     /**
      * Material
@@ -43,7 +43,6 @@ export default function Cube() {
     /**
      * Enter Animation
      */
-
     useEffect(() => {
         tl.current = gsap.timeline()
 
@@ -154,10 +153,6 @@ export default function Cube() {
     return (
         <>
             {cubeArray.map((cubePart, id) => {
-                if (!meshes.current[id]) {
-                    meshes.current[id] = useRef()
-                }
-
                 return (
                     <RigidBody
                         key={cubePart.name}
