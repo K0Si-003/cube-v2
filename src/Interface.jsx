@@ -1,8 +1,47 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useKeyboardControls } from '@react-three/drei'
 import useGame from './store/useGame.js'
 
+const images = [
+    '/images/lvl-1.png',
+    '/images/lvl-2.png',
+    '/images/lvl-3.png',
+    '/images/lvl-4.png',
+    '/images/bottom.png',
+]
+
+const preloadImages = (imageArray) => {
+    return Promise.all(
+        imageArray.map((src) => {
+            return new Promise((resolve, reject) => {
+                const img = new Image()
+                img.src = src
+                img.onload = () => resolve(src)
+                img.onerror = () =>
+                    reject(new Error(`Failed to load image: ${src}`))
+            })
+        })
+    )
+}
+
 export default function Interface() {
+    /**
+     * Images loading for levels maps
+     */
+    const setImagesLoadingStatus = useGame(
+        (state) => state.setImagesLoadingStatus
+    )
+
+    useEffect(() => {
+        preloadImages(images)
+            .then(() => {
+                setImagesLoadingStatus()
+            })
+            .catch((error) => {
+                console.error(error)
+            })
+    }, [])
+
     /**
      * Controls
      */
@@ -11,21 +50,17 @@ export default function Interface() {
     const leftward = useKeyboardControls((state) => state.leftward)
     const rightward = useKeyboardControls((state) => state.rightward)
 
+    const ControlKey = ({ isActive }) => (
+        <div className={`key ${isActive ? 'active' : ''}`}></div>
+    )
+
     /**
-     * Map
+     * Level maps
      */
-    const images = [
-        '/images/lvl-1.png',
-        '/images/lvl-2.png',
-        '/images/lvl-3.png',
-        '/images/lvl-4.png',
-        '/images/bottom.png',
-    ]
-
-    const ballPosition = useGame((state) => state.ballPosition)
     const [activLevel, setActivLevel] = useState(0)
+    const ballPosition = useGame((state) => state.ballPosition)
 
-    const getActivLevel = () => {
+    const getActivLevel = useCallback(() => {
         switch (ballPosition) {
             case 'cubeLevel1':
                 return 0
@@ -40,7 +75,7 @@ export default function Interface() {
             default:
                 return 0
         }
-    }
+    }, [ballPosition])
 
     useEffect(() => {
         setActivLevel(getActivLevel())
@@ -53,11 +88,11 @@ export default function Interface() {
                     return (
                         <img
                             loading="lazy"
-                            key={index}
+                            key={image}
                             src={image}
                             alt="map"
-                            className={`map--level ${
-                                activLevel === index ? 'active' : ''
+                            className={`map--level${
+                                activLevel === index ? ' active' : ''
                             }`}
                         />
                     )
@@ -65,12 +100,12 @@ export default function Interface() {
             </div>
             <div className="controls">
                 <div className="raw">
-                    <div className={`key ${forward ? 'active' : ''}`}></div>
+                    <ControlKey isActive={forward} />
                 </div>
                 <div className="raw">
-                    <div className={`key ${leftward ? 'active' : ''}`}></div>
-                    <div className={`key ${backward ? 'active' : ''}`}></div>
-                    <div className={`key ${rightward ? 'active' : ''}`}></div>
+                    <ControlKey isActive={leftward} />
+                    <ControlKey isActive={backward} />
+                    <ControlKey isActive={rightward} />
                 </div>
             </div>
         </div>

@@ -19,6 +19,13 @@ export default create(
              * Phases
              */
             phase: 'loading',
+            imagesLoaded: false,
+
+            setImagesLoadingStatus: () => {
+                set(() => {
+                    return {imagesLoaded: true}
+                })
+            },
 
             ready: () => {
                 set((state) => {

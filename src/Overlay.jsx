@@ -8,25 +8,23 @@ export default function Overlay() {
     const { progress } = useProgress()
 
     const ready = useGame((state) => state.ready)
-    const phase = useGame((state) => state.phase)
-
-    console.log(phase)
+    const imagesLoaded = useGame((state) => state.imagesLoaded)
 
     useEffect(() => {
-        if (progress == 100) {
+        if (progress === 100 && imagesLoaded === true) {
             ready()
 
             const timer = setTimeout(() => {
                 setIsLoaded(true)
-            }, 3000)
+            }, 1500)
 
             return () => clearTimeout(timer)
         }
-    }, [progress])
+    }, [progress, imagesLoaded])
 
     return (
-        <div className={`overlay ${isLoaded ? 'loaded' : ''}`}>
-            <div className="container">
+        <div className={`overlay${isLoaded ? ' loaded' : ''}`}>
+            <div className="loader">
                 <p>{progress} % loaded</p>
             </div>
         </div>
