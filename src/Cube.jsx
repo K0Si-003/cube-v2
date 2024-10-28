@@ -24,6 +24,8 @@ export default function Cube() {
 
     const end = useGame((state) => state.end) // Get method to change phase in store
 
+    const [isAnimationFinished, setIsAnimationFinished] = useState(false)
+
     /**
      * Material
      */
@@ -78,7 +80,14 @@ export default function Cube() {
         )
         tl.current.from(
             meshes.current[6].current.position,
-            { duration: 5, y: -150, ease: 'slow(0.7,0.7,false)' },
+            {
+                duration: 5,
+                y: -150,
+                ease: 'slow(0.7,0.7,false)',
+                onComplete: () => {
+                    setIsAnimationFinished(true)
+                },
+            },
             4
         )
     }, [])
@@ -97,56 +106,58 @@ export default function Cube() {
         /**
          * Cube rotation
          */
-        // Get preview cube rotation
-        const levelObj = state.scene.children.find((item) =>
-            item.name.startsWith('cube')
-        )
-        const lastRotationState = {
-            x: levelObj.rotation.x,
-            y: levelObj.rotation.y,
-            z: levelObj.rotation.z,
-        }
-
-        // Function to rotate cube
-        const updateRotation = (axis, direction) => {
-            const rotation = new THREE.Quaternion()
-            rotation.setFromEuler(
-                new THREE.Euler(
-                    lastRotationState.x +
-                        direction * 0.01 * (axis === 'x' ? 1 : 0),
-                    lastRotationState.y +
-                        direction * 0.01 * (axis === 'y' ? 1 : 0),
-                    lastRotationState.z +
-                        direction * 0.01 * (axis === 'z' ? 1 : 0)
-                )
+        if (isAnimationFinished) {
+            // Get preview cube rotation
+            const levelObj = state.scene.children.find((item) =>
+                item.name.startsWith('cube')
             )
-
-            for (let i = 0; i < cube.current.length; i++) {
-                cube.current[i].setNextKinematicRotation(rotation)
+            const lastRotationState = {
+                x: levelObj.rotation.x,
+                y: levelObj.rotation.y,
+                z: levelObj.rotation.z,
             }
-        }
 
-        // Rotate cube depending keys pressed
-        if (forward) updateRotation('x', -1)
-        if (backward) updateRotation('x', 1)
-        if (leftward) updateRotation('z', 1)
-        if (rightward) updateRotation('z', -1)
+            // Function to rotate cube
+            const updateRotation = (axis, direction) => {
+                const rotation = new THREE.Quaternion()
+                rotation.setFromEuler(
+                    new THREE.Euler(
+                        lastRotationState.x +
+                            direction * 0.01 * (axis === 'x' ? 1 : 0),
+                        lastRotationState.y +
+                            direction * 0.01 * (axis === 'y' ? 1 : 0),
+                        lastRotationState.z +
+                            direction * 0.01 * (axis === 'z' ? 1 : 0)
+                    )
+                )
 
-        /**
-         * Helpers
-         */
-        // // Set boxMaterial transparent
-        if (transparent) {
-            setTransparency(true)
-        } else {
-            setTransparency(false)
-        }
+                for (let i = 0; i < cube.current.length; i++) {
+                    cube.current[i].setNextKinematicRotation(rotation)
+                }
+            }
 
-        // // Set levelMaterial wireframe
-        if (wireframe) {
-            setIsWireframe(true)
-        } else {
-            setIsWireframe(false)
+            // Rotate cube depending keys pressed
+            if (forward) updateRotation('x', -1)
+            if (backward) updateRotation('x', 1)
+            if (leftward) updateRotation('z', 1)
+            if (rightward) updateRotation('z', -1)
+
+            /**
+             * Helpers
+             */
+            // // Set boxMaterial transparent
+            if (transparent) {
+                setTransparency(true)
+            } else {
+                setTransparency(false)
+            }
+
+            // // Set levelMaterial wireframe
+            if (wireframe) {
+                setIsWireframe(true)
+            } else {
+                setIsWireframe(false)
+            }
         }
     })
 
