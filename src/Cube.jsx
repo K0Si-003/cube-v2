@@ -9,13 +9,17 @@ import useGame from './store/useGame.js'
 export default function Cube() {
     /**
      * Import/Assign Meshes
-     */
-    const { nodes } = useGLTF('./meshes/cube.glb')
-    const cubeArray = Object.values(nodes).slice(1)
+    */
+   const { nodes } = useGLTF('./meshes/cube.glb')
+   const cubeArray = Object.values(nodes).slice(1)
+   
+   const cube = useRef([]) // ref for cube rotation
+   const meshes = useRef(cubeArray.map(() => useRef())) // ref for meshes enter animation
 
-    const cube = useRef([]) // ref for cube rotation
-    const meshes = useRef(cubeArray.map(() => useRef())) // ref for meshes enter animation
-
+   const [subscribeKeys, getKeys] = useKeyboardControls()
+   const [transparency, setTransparency] = useState(false)
+   const [isWireframe, setIsWireframe] = useState(false)
+   
     /**
      * Phases
      */
@@ -24,7 +28,7 @@ export default function Cube() {
     const ready = useGame((state) => state.ready)
     const start = useGame((state) => state.start)
     const end = useGame((state) => state.end)
-
+    
     // Enter animation state
     const [isAnimationFinished, setIsAnimationFinished] = useState(false)
 
@@ -99,9 +103,6 @@ export default function Cube() {
     /**
      * Controls
      */
-    const [subscribeKeys, getKeys] = useKeyboardControls()
-    const [transparency, setTransparency] = useState(false)
-    const [isWireframe, setIsWireframe] = useState(false)
     useFrame((state, delta) => {
         // Getkeys state for controls
         const {
