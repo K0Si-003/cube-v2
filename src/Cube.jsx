@@ -15,15 +15,17 @@ export default function Cube() {
 
     const cube = useRef([]) // ref for cube rotation
     const meshes = useRef(cubeArray.map(() => useRef())) // ref for meshes enter animation
-    const tl = useRef() // ref for timeline gsap
 
-    const [subscribeKeys, getKeys] = useKeyboardControls()
+    /**
+     * Phases
+     */
+    // Store
+    const phase = useGame((state) => state.phase)
+    const ready = useGame((state) => state.ready)
+    const start = useGame((state) => state.start)
+    const end = useGame((state) => state.end)
 
-    const [transparency, setTransparency] = useState(false)
-    const [isWireframe, setIsWireframe] = useState(false)
-
-    const end = useGame((state) => state.end) // Get method to change phase in store
-
+    // Enter animation state
     const [isAnimationFinished, setIsAnimationFinished] = useState(false)
 
     /**
@@ -45,6 +47,7 @@ export default function Cube() {
     /**
      * Enter Animation
      */
+    const tl = useRef() // ref for timeline gsap
     useEffect(() => {
         tl.current = gsap.timeline()
 
@@ -86,12 +89,19 @@ export default function Cube() {
                 ease: 'slow(0.7,0.7,false)',
                 onComplete: () => {
                     setIsAnimationFinished(true)
+                    ready()
                 },
             },
             4
         )
     }, [])
 
+    /**
+     * Controls
+     */
+    const [subscribeKeys, getKeys] = useKeyboardControls()
+    const [transparency, setTransparency] = useState(false)
+    const [isWireframe, setIsWireframe] = useState(false)
     useFrame((state, delta) => {
         // Getkeys state for controls
         const {
@@ -133,6 +143,10 @@ export default function Cube() {
 
                 for (let i = 0; i < cube.current.length; i++) {
                     cube.current[i].setNextKinematicRotation(rotation)
+                }
+
+                if (phase === 'ready') {
+                    start()
                 }
             }
 

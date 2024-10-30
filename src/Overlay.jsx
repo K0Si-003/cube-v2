@@ -4,16 +4,12 @@ import useGame from './store/useGame.js'
 
 export default function Overlay() {
     const [isLoaded, setIsLoaded] = useState(false)
-
-    const { progress } = useProgress()
-
-    const ready = useGame((state) => state.ready)
     const imagesLoaded = useGame((state) => state.imagesLoaded)
 
+    const { progress } = useProgress()
+    
     useEffect(() => {
         if (progress === 100 && imagesLoaded === true) {
-            ready()
-
             const timer = setTimeout(() => {
                 setIsLoaded(true)
             }, 1500)
