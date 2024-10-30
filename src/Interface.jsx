@@ -25,6 +25,8 @@ const preloadImages = (imageArray) => {
 }
 
 export default function Interface() {
+    const phase = useGame((state) => state.phase)
+
     /**
      * Images loading for levels maps
      */
@@ -82,32 +84,36 @@ export default function Interface() {
     }, [ballPosition])
 
     return (
-        <div className="interface">
-            <div className="map">
-                {images.map((image, index) => {
-                    return (
-                        <img
-                            loading="lazy"
-                            key={image}
-                            src={image}
-                            alt="map"
-                            className={`map--level${
-                                activLevel === index ? ' active' : ''
-                            }`}
-                        />
-                    )
-                })}
-            </div>
-            <div className="controls">
-                <div className="raw">
-                    <ControlKey isActive={forward} />
+        <>
+            {phase === 'ready' && (
+                <div className="interface">
+                    <div className="map">
+                        {images.map((image, index) => {
+                            return (
+                                <img
+                                    loading="lazy"
+                                    key={image}
+                                    src={image}
+                                    alt="map"
+                                    className={`map--level${
+                                        activLevel === index ? ' active' : ''
+                                    }`}
+                                />
+                            )
+                        })}
+                    </div>
+                    <div className="controls">
+                        <div className="raw">
+                            <ControlKey isActive={forward} />
+                        </div>
+                        <div className="raw">
+                            <ControlKey isActive={leftward} />
+                            <ControlKey isActive={backward} />
+                            <ControlKey isActive={rightward} />
+                        </div>
+                    </div>
                 </div>
-                <div className="raw">
-                    <ControlKey isActive={leftward} />
-                    <ControlKey isActive={backward} />
-                    <ControlKey isActive={rightward} />
-                </div>
-            </div>
-        </div>
+            )}
+        </>
     )
 }
