@@ -64,7 +64,7 @@ export default function Cube() {
         )
         tl.current.from(
             meshes.current[1].current.rotation,
-            { duration: 3, y: Math.PI, ease: 'slow(0.7,0.7,false)' },
+            { duration: 3, y: Math.PI * 0.5, ease: 'slow(0.7,0.7,false)' },
             0
         )
 
@@ -76,7 +76,7 @@ export default function Cube() {
         )
         tl.current.from(
             meshes.current[2].current.rotation,
-            { duration: 3, y: -Math.PI, ease: 'slow(0.7,0.7,false)' },
+            { duration: 3, y: -Math.PI * 0.5, ease: 'slow(0.7,0.7,false)' },
             0.5
         )
 
@@ -88,7 +88,7 @@ export default function Cube() {
         )
         tl.current.from(
             meshes.current[3].current.rotation,
-            { duration: 3, y: Math.PI, ease: 'slow(0.7,0.7,false)' },
+            { duration: 3, y: Math.PI * 0.5, ease: 'slow(0.7,0.7,false)' },
             1
         )
 
@@ -100,7 +100,7 @@ export default function Cube() {
         )
         tl.current.from(
             meshes.current[4].current.rotation,
-            { duration: 3, y: -Math.PI, ease: 'slow(0.7,0.7,false)' },
+            { duration: 3, y: -Math.PI * 0.5, ease: 'slow(0.7,0.7,false)' },
             1.5
         )
 
