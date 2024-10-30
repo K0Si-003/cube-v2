@@ -9,17 +9,17 @@ import useGame from './store/useGame.js'
 export default function Cube() {
     /**
      * Import/Assign Meshes
-    */
-   const { nodes } = useGLTF('./meshes/cube.glb')
-   const cubeArray = Object.values(nodes).slice(1)
-   
-   const cube = useRef([]) // ref for cube rotation
-   const meshes = useRef(cubeArray.map(() => useRef())) // ref for meshes enter animation
+     */
+    const { nodes } = useGLTF('./meshes/cube.glb')
+    const cubeArray = Object.values(nodes).slice(1)
 
-   const [subscribeKeys, getKeys] = useKeyboardControls()
-   const [transparency, setTransparency] = useState(false)
-   const [isWireframe, setIsWireframe] = useState(false)
-   
+    const cube = useRef([]) // ref for cube rotation
+    const meshes = useRef(cubeArray.map(() => useRef())) // ref for meshes enter animation
+
+    const [subscribeKeys, getKeys] = useKeyboardControls()
+    const [transparency, setTransparency] = useState(false)
+    const [isWireframe, setIsWireframe] = useState(false)
+
     /**
      * Phases
      */
@@ -28,7 +28,7 @@ export default function Cube() {
     const ready = useGame((state) => state.ready)
     const start = useGame((state) => state.start)
     const end = useGame((state) => state.end)
-    
+
     // Enter animation state
     const [isAnimationFinished, setIsAnimationFinished] = useState(false)
 
@@ -54,50 +54,87 @@ export default function Cube() {
     const tl = useRef() // ref for timeline gsap
     useEffect(() => {
         tl.current = gsap.timeline()
+        const vh = window.innerHeight
 
-        tl.current.from(
-            meshes.current[0].current.position,
-            { duration: 5, y: 150, ease: 'slow(0.7,0.7,false)' },
-            0
-        )
+        // Level 1
         tl.current.from(
             meshes.current[1].current.position,
-            { duration: 5, y: -150, ease: 'slow(0.7,0.7,false)' },
+            { duration: 3, y: -vh * 0.25, ease: 'slow(0.7,0.7,false)' },
             0
         )
         tl.current.from(
+            meshes.current[1].current.rotation,
+            { duration: 3, y: Math.PI, ease: 'slow(0.7,0.7,false)' },
+            0
+        )
+
+        // Level 2
+        tl.current.from(
             meshes.current[2].current.position,
-            { duration: 5, y: -150, ease: 'slow(0.7,0.7,false)' },
+            { duration: 3, y: -vh * 0.25, ease: 'slow(0.7,0.7,false)' },
+            0.5
+        )
+        tl.current.from(
+            meshes.current[2].current.rotation,
+            { duration: 3, y: -Math.PI, ease: 'slow(0.7,0.7,false)' },
+            0.5
+        )
+
+        // Level 3
+        tl.current.from(
+            meshes.current[3].current.position,
+            { duration: 3, y: -vh * 0.25, ease: 'slow(0.7,0.7,false)' },
             1
         )
         tl.current.from(
-            meshes.current[3].current.position,
-            { duration: 5, y: -150, ease: 'slow(0.7,0.7,false)' },
-            2
+            meshes.current[3].current.rotation,
+            { duration: 3, y: Math.PI, ease: 'slow(0.7,0.7,false)' },
+            1
         )
+
+        // Level 4
         tl.current.from(
             meshes.current[4].current.position,
-            { duration: 5, y: -150, ease: 'slow(0.7,0.7,false)' },
-            3
+            { duration: 3, y: -vh * 0.25, ease: 'slow(0.7,0.7,false)' },
+            1.5
         )
         tl.current.from(
+            meshes.current[4].current.rotation,
+            { duration: 3, y: -Math.PI, ease: 'slow(0.7,0.7,false)' },
+            1.5
+        )
+
+        // Top
+        tl.current.from(
+            meshes.current[0].current.position,
+            { duration: 3, y: vh * 0.25, ease: 'slow(0.7,0.7,false)' },
+            3
+        )
+
+        // Bottom
+        tl.current.from(
             meshes.current[5].current.position,
-            { duration: 5, y: -150, ease: 'slow(0.7,0.7,false)' },
-            3.5
+            { duration: 3, y: -vh * 0.25, ease: 'slow(0.7,0.7,false)' },
+            2
         )
         tl.current.from(
             meshes.current[6].current.position,
             {
-                duration: 5,
-                y: -150,
+                duration: 3,
+                y: -vh * 0.25,
                 ease: 'slow(0.7,0.7,false)',
                 onComplete: () => {
                     setIsAnimationFinished(true)
                     ready()
+                    console.log(meshes.current[6].current)
                 },
             },
-            4
+            2
         )
+
+        return () => {
+            tl.current.kill() // Clean timeline
+        }
     }, [])
 
     /**
