@@ -12,7 +12,7 @@ export default function Overlay() {
         if (progress === 100 && imagesLoaded === true) {
             const timer = setTimeout(() => {
                 setIsLoaded(true)
-            }, 1500)
+            }, 500)
 
             return () => clearTimeout(timer)
         }
