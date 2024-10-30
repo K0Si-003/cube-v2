@@ -85,7 +85,7 @@ export default function Interface() {
 
     return (
         <>
-            {phase === 'ready' && (
+            {phase != 'loading' && (
                 <div className="interface">
                     <div className="map">
                         {images.map((image, index) => {
