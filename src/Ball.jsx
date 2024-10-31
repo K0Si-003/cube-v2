@@ -3,9 +3,11 @@ import { RigidBody } from '@react-three/rapier'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import useGame from './store/useGame.js'
+import { gsap } from "gsap";
 
 export default function Ball() {
     const ball = useRef()
+    const mesh = useRef()
 
     const [levelPosition, setLevelPosition] = useState(null)
 
@@ -24,6 +26,25 @@ export default function Ball() {
         }, 500)
         return () => clearTimeout(timer)
     }, [levelPosition])
+
+    /**
+     * Enter Animation
+     */
+    const tl = useRef() // ref for timeline gsap
+    useEffect(() => {
+        tl.current = gsap.timeline()
+        const vh = window.innerHeight
+
+        tl.current.from(
+            mesh.current.position,
+            { duration: 3, y: vh * 0.1, ease: 'circ.out' },
+            0
+        )
+
+        return () => {
+            tl.current.kill() // Clean timeline
+        }
+    }, [])
 
     useFrame((state, delta) => {
         /**
@@ -53,7 +74,7 @@ export default function Ball() {
         <RigidBody
             name="ball"
             ref={ball}
-            // canSleep={false}
+            canSleep={false}
             onSleep={() => setIsAsleep(true)}
             onWake={() => setIsAsleep(false)}
             position={[-7, 10, -2]}
@@ -71,10 +92,15 @@ export default function Ball() {
                 }
             }}
         >
-            <mesh castShadow>
+            <mesh ref={mesh} castShadow>
                 <icosahedronGeometry args={[0.85, 20]} />
-                {/* <meshStandardMaterial flatShading color="mediumpurple" /> */}
-                <meshPhysicalMaterial color={isAsleep ? 'white' : 'blue'} />
+                <meshStandardMaterial
+                    flatShading
+                    color="#fff"
+                    metalness={0.7} // Valeur de métal (1 = complètement métallique)
+                    roughness={0.2} // Valeur de rugosité (0 = lisse, 1 = rugueux)
+                />
+                {/* <meshPhysicalMaterial color={isAsleep ? 'white' : 'blue'} /> */}
             </mesh>
         </RigidBody>
     )
