@@ -28,6 +28,17 @@ export default function Interface() {
     const phase = useGame((state) => state.phase)
 
     /**
+     * Render interface
+     */
+    const [isVisible, setIsVisible] = useState(false)
+
+    useEffect(() => {
+        if (phase !== 'loading' && phase !== 'intro') {
+            setIsVisible(true)
+        }
+    }, [phase])
+
+    /**
      * Images loading for levels maps
      */
     const setImagesLoadingStatus = useGame(
@@ -85,35 +96,33 @@ export default function Interface() {
 
     return (
         <>
-            {phase != 'loading' && (
-                <div className="interface">
-                    <div className="map">
-                        {images.map((image, index) => {
-                            return (
-                                <img
-                                    loading="lazy"
-                                    key={image}
-                                    src={image}
-                                    alt="map"
-                                    className={`map--level${
-                                        activLevel === index ? ' active' : ''
-                                    }`}
-                                />
-                            )
-                        })}
+            <div className={`interface${isVisible ? ' visible' : ''}`}>
+                <div className="map">
+                    {images.map((image, index) => {
+                        return (
+                            <img
+                                loading="lazy"
+                                key={image}
+                                src={image}
+                                alt="map"
+                                className={`map--level${
+                                    activLevel === index ? ' active' : ''
+                                }`}
+                            />
+                        )
+                    })}
+                </div>
+                <div className="controls">
+                    <div className="raw">
+                        <ControlKey isActive={forward} />
                     </div>
-                    <div className="controls">
-                        <div className="raw">
-                            <ControlKey isActive={forward} />
-                        </div>
-                        <div className="raw">
-                            <ControlKey isActive={leftward} />
-                            <ControlKey isActive={backward} />
-                            <ControlKey isActive={rightward} />
-                        </div>
+                    <div className="raw">
+                        <ControlKey isActive={leftward} />
+                        <ControlKey isActive={backward} />
+                        <ControlKey isActive={rightward} />
                     </div>
                 </div>
-            )}
+            </div>
         </>
     )
 }
