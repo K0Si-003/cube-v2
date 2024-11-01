@@ -216,8 +216,6 @@ export default function Cube() {
         }
     })
 
-    console.log(phase)
-
     return (
         <>
             {cubeArray.map((cubePart, id) => {
