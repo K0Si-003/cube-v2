@@ -16,9 +16,8 @@ export default create(
             },
 
             /**
-             * Phases
+             * Images loading
              */
-            phase: 'loading',
             imagesLoaded: false,
 
             setImagesLoadingStatus: () => {
@@ -27,9 +26,22 @@ export default create(
                 })
             },
 
-            ready: () => {
+            /**
+             * Phases
+             */
+            phase: 'loading',
+
+            intro: () => {
                 set((state) => {
                     if (state.phase === 'loading')
+                        return { phase: 'intro' }
+                    return {}
+                })
+            },
+
+            ready: () => {
+                set((state) => {
+                    if (state.phase === 'intro')
                         return { phase: 'ready', startTime: Date.now() }
                     return {}
                 })
