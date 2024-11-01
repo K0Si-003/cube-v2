@@ -31,20 +31,23 @@ export default function Ball() {
      * Enter Animation
      */
     const tl = useRef() // ref for timeline gsap
+    const phase = useGame((state) => state.phase)
     useEffect(() => {
         tl.current = gsap.timeline()
         const vh = window.innerHeight
 
-        tl.current.from(
-            mesh.current.position,
-            { duration: 3, y: vh * 0.1, ease: 'circ.out' },
-            0
-        )
-
-        return () => {
-            tl.current.kill() // Clean timeline
+        if (phase === 'intro') {
+            tl.current.from(
+                mesh.current.position,
+                { duration: 3, y: vh * 0.1, ease: 'circ.out' },
+                0
+            )
+            return () => {
+                tl.current.kill() // Clean timeline
+            }
         }
-    }, [])
+
+    }, [phase])
 
     useFrame((state, delta) => {
         /**
