@@ -9,24 +9,25 @@ body,
     background: #eeeeee;
 }
 
-// Overlay
+/**
+* Overlay
+*/
 .overlay {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     background-color: darkslategray;
     z-index: 1;
     opacity: 1;
     transition: opacity 2s ease;
 
     .loader {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
-        height: 100%;
         font-size: 5em;
         opacity: 1;
         transition: opacity 0.5s ease;
@@ -41,6 +42,11 @@ body,
             transition: opacity 0.5s ease;
         }
     }
+
+    .btn {
+        padding: 10px 20px;
+        background-color: red;
+    }
 }
 
 /**
@@ -54,6 +60,13 @@ body,
     height: 100%;
     pointer-events: none;
     font-family: 'Bebas Neue', cursive;
+    opacity: 0;
+    transition: opacity 2s ease;
+
+    &.visible {
+        opacity: 1;
+        pointer-events: auto;
+    }
 }
 
 .map {
