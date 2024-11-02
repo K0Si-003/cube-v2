@@ -22,9 +22,15 @@ export default create(
 
             setImagesLoadingStatus: () => {
                 set(() => {
-                    return {imagesLoaded: true}
+                    return { imagesLoaded: true }
                 })
             },
+
+            /**
+             * Time
+             */
+            startTime: 0,
+            endTime: 0,
 
             /**
              * Phases
@@ -33,8 +39,7 @@ export default create(
 
             intro: () => {
                 set((state) => {
-                    if (state.phase === 'loading')
-                        return { phase: 'intro' }
+                    if (state.phase === 'loading') return { phase: 'intro' }
                     return {}
                 })
             },
@@ -58,7 +63,7 @@ export default create(
             end: () => {
                 set((state) => {
                     if (state.phase === 'playing')
-                        return { phase: 'ended', startTime: Date.now() }
+                        return { phase: 'ended', endTime: Date.now() }
                     return {}
                 })
             },
