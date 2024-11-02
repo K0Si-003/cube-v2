@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useKeyboardControls } from '@react-three/drei'
 import useGame from './store/useGame.js'
+import { addEffect } from '@react-three/fiber'
 
 const images = [
     '/images/lvl-1.png',
@@ -25,6 +26,7 @@ const preloadImages = (imageArray) => {
 }
 
 export default function Interface() {
+    const time = useRef()
     const phase = useGame((state) => state.phase)
 
     /**
@@ -94,9 +96,42 @@ export default function Interface() {
         setActivLevel(getActivLevel())
     }, [ballPosition])
 
+    /**
+     * Timer
+     */
+    useEffect(() => {
+        const unsubscribeEffect = addEffect(() => {
+            const state = useGame.getState()
+
+            let elapsedTime = 0
+
+            if (state.phase === 'playing')
+                elapsedTime = Date.now() - state.startTime
+            else if (state.phase === 'ended')
+                elapsedTime = state.endTime - state.startTime
+
+            elapsedTime /= 1000
+            elapsedTime = elapsedTime.toFixed(1)
+
+            if (time.current)
+                time.current.textContent = elapsedTime
+            
+        })
+
+        return () => {
+            unsubscribeEffect
+        }
+    }, [])
+
     return (
         <>
             <div className={`interface${isVisible ? ' visible' : ''}`}>
+                {/* Time */}
+                <div ref={time} className="time">
+                    0.00
+                </div>
+
+                {/* Map */}
                 <div className="map">
                     {images.map((image, index) => {
                         return (
@@ -112,6 +147,8 @@ export default function Interface() {
                         )
                     })}
                 </div>
+
+                {/* Controls */}
                 <div className="controls">
                     <div className="raw">
                         <ControlKey isActive={forward} />

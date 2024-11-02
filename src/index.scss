@@ -69,6 +69,21 @@ body,
     }
 }
 
+/**
+* Time
+*/
+.time {
+    position: absolute;
+    top: 15%;
+    left: 0;
+    width: 100%;
+    color: white;
+    font-size: 6vh;
+    background: #00000033;
+    padding-top: 5px;
+    text-align: center;
+}
+
 .map {
     display: flex;
     justify-content: space-around;
