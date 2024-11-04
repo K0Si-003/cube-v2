@@ -247,6 +247,8 @@ export default function Cube() {
                         scale={[0.2, 0.2, 0.2]}
                         restitution={0.2}
                         friction={0}
+                        castShadow
+                        receiveShadow
                         onCollisionEnter={({ target }) => {
                             if (
                                 cubePart.name === 'Finish' &&
