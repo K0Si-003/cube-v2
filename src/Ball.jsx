@@ -3,7 +3,7 @@ import { RigidBody } from '@react-three/rapier'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import useGame from './store/useGame.js'
-import { gsap } from "gsap";
+import { gsap } from 'gsap'
 
 export default function Ball() {
     const ball = useRef()
@@ -32,22 +32,45 @@ export default function Ball() {
      */
     const tl = useRef() // ref for timeline gsap
     const phase = useGame((state) => state.phase)
+
+    const resetBall = () => {
+        if (ball.current) {
+            ball.current.setTranslation({ x: -7, y: 10, z: -2 })
+            ball.current.setLinvel({ x: 0, y: 0, z: 0 })
+            ball.current.setAngvel({ x: 0, y: 0, z: 0 })
+        }
+    }
+
+    const hasRestart = useGame((state) => state.hasRestart)
+
     useEffect(() => {
         tl.current = gsap.timeline()
         const vh = window.innerHeight
 
-        if (phase === 'intro') {
+        const unsubscribeReset = useGame.subscribe(
+            (state) => state.phase,
+            (value) => {
+                if (value === 'intro') {
+                    setTimeout(() => {
+                        resetBall()
+                    }, 50);
+                }
+            }
+        )
+
+        if (phase === 'intro' && hasRestart === false) {
             tl.current.from(
                 mesh.current.position,
                 { duration: 3, y: vh * 0.1, ease: 'circ.out' },
                 0
             )
-            return () => {
-                tl.current.kill() // Clean timeline
-            }
         }
 
-    }, [phase])
+        return () => {
+            tl.current.kill() // Clean timeline
+            unsubscribeReset()
+        }
+    }, [])
 
     useFrame((state, delta) => {
         /**
@@ -84,8 +107,8 @@ export default function Ball() {
             colliders="ball"
             restitution={0.2}
             friction={1}
-            linearDamping={0.1}
-            angularDamping={0.1}
+            linearDamping={0.4}
+            angularDamping={0.4}
             onCollisionEnter={(other) => {
                 if (
                     other.rigidBodyObject.name.includes('Level') ||
@@ -100,10 +123,9 @@ export default function Ball() {
                 <meshStandardMaterial
                     flatShading
                     color="#fff"
-                    metalness={0.7} // Valeur de métal (1 = complètement métallique)
-                    roughness={0.2} // Valeur de rugosité (0 = lisse, 1 = rugueux)
+                    metalness={0.7}
+                    roughness={0.2}
                 />
-                {/* <meshPhysicalMaterial color={isAsleep ? 'white' : 'blue'} /> */}
             </mesh>
         </RigidBody>
     )

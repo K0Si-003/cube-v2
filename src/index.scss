@@ -34,6 +34,7 @@ body,
     }
 
     &.loaded {
+        z-index: 0;
         opacity: 0;
         transition: opacity 2s ease 0.5s;
     
@@ -84,6 +85,28 @@ body,
     text-align: center;
 }
 
+/**
+* Restart
+*/
+.restart {
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    right: 5%;
+    bottom: 5%;
+    color: white;
+    font-size: 3rem;
+    background: #00000033;
+    border: 2px solid #ffffff;
+    padding: 10px 20px;
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 1;
+}
+
+/**
+*  Map
+*/
 .map {
     display: flex;
     justify-content: space-around;
@@ -108,7 +131,7 @@ body,
 */
 .controls {
     position: absolute;
-    bottom: 10%;
+    bottom: 5%;
     left: 0;
     width: 100%;
 }

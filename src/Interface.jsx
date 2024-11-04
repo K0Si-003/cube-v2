@@ -28,6 +28,7 @@ const preloadImages = (imageArray) => {
 export default function Interface() {
     const time = useRef()
     const phase = useGame((state) => state.phase)
+    const restart = useGame((state) => state.restart)
 
     /**
      * Render interface
@@ -113,9 +114,7 @@ export default function Interface() {
             elapsedTime /= 1000
             elapsedTime = elapsedTime.toFixed(1)
 
-            if (time.current)
-                time.current.textContent = elapsedTime
-            
+            if (time.current) time.current.textContent = elapsedTime
         })
 
         return () => {
@@ -130,6 +129,13 @@ export default function Interface() {
                 <div ref={time} className="time">
                     0.00
                 </div>
+
+                {/* Restart */}
+                {(phase === 'ended' || phase === 'playing') && (
+                    <div className="restart" onClick={restart}>
+                        Restart
+                    </div>
+                )}
 
                 {/* Map */}
                 <div className="map">

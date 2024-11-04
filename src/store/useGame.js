@@ -5,17 +5,6 @@ export default create(
     subscribeWithSelector((set) => {
         return {
             /**
-             * ballPosition
-             */
-            ballPosition: null,
-
-            changePosition: (newPosition) => {
-                set(() => {
-                    return { ballPosition: newPosition }
-                })
-            },
-
-            /**
              * Images loading
              */
             imagesLoaded: false,
@@ -23,6 +12,17 @@ export default create(
             setImagesLoadingStatus: () => {
                 set(() => {
                     return { imagesLoaded: true }
+                })
+            },
+
+            /**
+             * ballPosition
+             */
+            ballPosition: null,
+
+            changePosition: (newPosition) => {
+                set(() => {
+                    return { ballPosition: newPosition }
                 })
             },
 
@@ -56,6 +56,15 @@ export default create(
                 set((state) => {
                     if (state.phase === 'ready')
                         return { phase: 'playing', startTime: Date.now() }
+                    return {}
+                })
+            },
+
+            restart: () => {
+                set((state) => {
+                    if (state.phase === 'playing' || state.phase === 'ended') {
+                        return { phase: 'intro' }
+                    }
                     return {}
                 })
             },

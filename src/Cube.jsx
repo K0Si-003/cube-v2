@@ -52,11 +52,34 @@ export default function Cube() {
      * Enter Animation
      */
     const tl = useRef() // ref for timeline gsap
+
+    const resetCube = () => {
+        const rotation = new THREE.Quaternion()
+        rotation.setFromEuler(new THREE.Euler(0, 0, 0))
+
+        for (let i = 0; i < cube.current.length; i++) {
+            cube.current[i].setNextKinematicRotation(rotation)
+        }
+    }
+
     useEffect(() => {
         tl.current = gsap.timeline()
         const vh = window.innerHeight
-        
+
+        const unsubscribeReset = useGame.subscribe(
+            (state) => state.phase,
+            (value) => {
+                if (value === 'intro') resetCube()
+            }
+        )
+    
         if (phase === 'intro') {
+            // Top
+            tl.current.from(
+                meshes.current[0].current.position,
+                { duration: 3, y: vh * 0.25, ease: 'slow(0.7,0.7,false)' },
+                2
+            )
 
             // Level 1
             tl.current.from(
@@ -106,13 +129,6 @@ export default function Cube() {
                 1.5
             )
     
-            // Top
-            tl.current.from(
-                meshes.current[0].current.position,
-                { duration: 3, y: vh * 0.25, ease: 'slow(0.7,0.7,false)' },
-                2
-            )
-    
             // Bottom
             tl.current.from(
                 meshes.current[5].current.position,
@@ -136,6 +152,7 @@ export default function Cube() {
 
         return () => {
             tl.current.kill() // Clean timeline
+            unsubscribeReset()
         }
         
     }, [phase])
@@ -174,11 +191,11 @@ export default function Cube() {
                 rotation.setFromEuler(
                     new THREE.Euler(
                         lastRotationState.x +
-                            direction * 0.01 * (axis === 'x' ? 1 : 0),
+                            direction * 0.0105 * (axis === 'x' ? 1 : 0),
                         lastRotationState.y +
-                            direction * 0.01 * (axis === 'y' ? 1 : 0),
+                            direction * 0.0105 * (axis === 'y' ? 1 : 0),
                         lastRotationState.z +
-                            direction * 0.01 * (axis === 'z' ? 1 : 0)
+                            direction * 0.0105 * (axis === 'z' ? 1 : 0)
                     )
                 )
 
