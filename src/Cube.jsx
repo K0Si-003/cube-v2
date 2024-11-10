@@ -36,7 +36,7 @@ export default function Cube() {
      * Material
      */
     const boxMaterial = new THREE.MeshStandardMaterial({
-        color: '#94ac3c',
+        color: '#a9c52f',
         metalness: '0.6',
         roughness: '0.7',
         transparent: transparency,

@@ -4,6 +4,7 @@ import useGame from './store/useGame.js'
 
 export default function Overlay() {
     const [isLoaded, setIsLoaded] = useState(false)
+    const [isStarted, setIsStarted] = useState(false)
 
     /**
      * Handle assets loading
@@ -13,7 +14,8 @@ export default function Overlay() {
     const intro = useGame((state) => state.intro) // set phase to intro
 
     const [loadingProgress, setLoadingProgress] = useState(25)
-    const [hasIncrementedImagesLoaded, setHasIncrementedImagesLoaded] = useState(false)
+    const [hasIncrementedImagesLoaded, setHasIncrementedImagesLoaded] =
+        useState(false)
     const [hasIncrementedProgress, setHasIncrementedProgress] = useState(false)
 
     useEffect(() => {
@@ -33,20 +35,40 @@ export default function Overlay() {
     /**
      * Btn Start
      */
-    const handleButtonClick = () => {
+    const handleButtonEnter = () => {
         if (loadingProgress === 100) {
             setIsLoaded(true)
+        }
+    }
+    const handleButtonStart = () => {
+        if (loadingProgress === 100) {
+            setIsStarted(true)
             intro()
         }
     }
 
     return (
-        <div className={`overlay${isLoaded ? ' loaded' : ''}`}>
-            <button className="btn" onClick={handleButtonClick}>
-                Cliquez ici
-            </button>
-            <div className="loader">
-                <p>{loadingProgress} % loaded</p>
+        <div className={`overlay${isStarted ? ' loaded' : ''}`}>
+            <div className="landing">
+                <h1 className="title">Cube Puzzle 3D</h1>
+                <button className="btn" onClick={handleButtonEnter}>
+                    Enter
+                </button>
+                <p className="loading">{loadingProgress}%</p>
+            </div>
+            <div className={`rules${isLoaded ? ' loaded' : ''}`}>
+                <h2 className="title">The rules</h2>
+                <p className="text">
+                    Resolve this 3D maze puzzle. Guide the ball through the cube
+                    to reach the finish !
+                </p>
+                <h2 className="title">Controls</h2>
+                <p className="text">
+                    Use arrows or WASD keys to rotate the cube.
+                </p>
+                <button className="btn" onClick={handleButtonStart}>
+                    Start
+                </button>
             </div>
         </div>
     )
