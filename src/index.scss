@@ -137,7 +137,7 @@ body,
     width: 100%;
     height: 100%;
     pointer-events: none;
-    font-family: 'Bebas Neue', cursive;
+    font-family: 'Outfit', sans-serif;
     opacity: 0;
     transition: opacity 2s ease;
 
@@ -145,87 +145,121 @@ body,
         opacity: 1;
         pointer-events: auto;
     }
-}
 
-/**
-* Time
-*/
-.time {
-    position: absolute;
-    top: 15%;
-    left: 0;
-    width: 100%;
-    color: white;
-    font-size: 6vh;
-    background: #00000033;
-    padding-top: 5px;
-    text-align: center;
-}
+    .time {
+        position: absolute;
+        top: 5%;
+        right: 0;
+        width: 180px;
+        padding: 5px 5px;
+        color: $light-color;
+        background: $second-dark-color;
+        border: 2px solid $light-color;
+        border-right: none;
+        font-size: 2.5rem;
+        text-align: center;
+        border-radius: 5px 0 0 5px;
+    }
 
-/**
-* Restart
-*/
-.restart {
-    display: flex;
-    justify-content: center;
-    position: absolute;
-    right: 5%;
-    bottom: 5%;
-    color: white;
-    font-size: 3rem;
-    background: #00000033;
-    border: 2px solid #ffffff;
-    padding: 10px 20px;
-    pointer-events: auto;
-    cursor: pointer;
-    z-index: 1;
-}
-
-/**
-*  Map
-*/
-.map {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 30px;
-
-    .map--level {
-        width: 100px;
-        height: auto;
-        filter: grayscale(1);
-        transition: transform 0.3s ease;
+    .restart {
+        display: flex;
+        justify-content: center;
+        position: absolute;
+        right: 0;
+        bottom: 5%;
+        color: $light-color;
+        font-size: 2rem;
+        background: $second-dark-color;
+        border: 2px solid $light-color;
+        border-right: none;
+        padding: 10px 30px;
+        pointer-events: auto;
         cursor: pointer;
+        z-index: 1;
+        border-radius: 5px 0 0 5px;
+
+        &:hover {
+            color: $green-color;
+            border-color: $green-color;
+        }
     }
 
-    .active {
-        transform: scale(1.5);
-        filter: grayscale(0);
+    .map {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 100%;
+        margin-left: 50px;
+
+        &:before {
+            content: "";
+            display: block;
+            background-color: #00000015;
+            border: 2px solid $green-color;
+            height: 80%;
+            width: 315px;
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 0 10px 10px 0;
+        }
+
+        .map--level {
+            width: 100px;
+            height: auto;
+            margin: 30px 0;
+            filter: grayscale(1);
+            transition: transform 0.3s ease;
+        }
+
+        .active {
+            transform: scale(1.5);
+            filter: grayscale(0);
+        }
     }
-}
 
-/** 
-* Controls
-*/
-.controls {
-    position: absolute;
-    bottom: 5%;
-    left: 0;
-    width: 100%;
-}
+    .controls {
+        position: absolute;
+        bottom: 5%;
+        left: 0;
+        width: 100%;
 
-.controls .raw {
-    display: flex;
-    justify-content: center;
-}
+        .raw {
+            display: flex;
+            justify-content: center;
 
-.controls .key {
-    width: 40px;
-    height: 40px;
-    margin: 4px;
-    border: 2px solid #ffffff;
-    background: #ffffff44;
-}
+            &:nth-child(1) {
+                .key {
+                    transform: rotate(0);
+                }
+            }
+        }
 
-.controls .key.active {
-    background: #ffffff99;
+        .key {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 40px;
+            margin: 4px;
+            border: 2px solid $green-color;
+            background: $second-dark-color;
+            color: $light-color;
+            border-radius: 5px;
+
+            &:nth-child(1) {
+                transform: rotate(-90deg);
+            }
+            &:nth-child(2) {
+                transform: rotate(180deg);
+            }
+            &:nth-child(3) {
+                transform: rotate(90deg);
+            }
+
+            &.active {
+                background: $dark-color;
+            }
+        }
+    }
 }

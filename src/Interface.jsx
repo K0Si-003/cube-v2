@@ -67,7 +67,7 @@ export default function Interface() {
     const rightward = useKeyboardControls((state) => state.rightward)
 
     const ControlKey = ({ isActive }) => (
-        <div className={`key ${isActive ? 'active' : ''}`}></div>
+        <div className={`key ${isActive ? 'active' : ''}`}>↑</div>
     )
 
     /**
