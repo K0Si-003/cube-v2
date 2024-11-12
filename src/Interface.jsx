@@ -29,12 +29,13 @@ export default function Interface() {
     const time = useRef()
     const phase = useGame((state) => state.phase)
     const restart = useGame((state) => state.restart)
-    
+
     /**
      * Render interface / modal
-    */
-   const [isVisible, setIsVisible] = useState(false)
-   const [isModalVisible, setIsModalVisible] = useState(true)
+     */
+    const [isVisible, setIsVisible] = useState(false)
+    const [isFinishVisible, setIsModalVisible] = useState(true)
+    const [isHelpVisible, setIsHelpVisible] = useState(false)
 
     useEffect(() => {
         if (phase !== 'loading' && phase !== 'intro') {
@@ -43,6 +44,10 @@ export default function Interface() {
 
         if (phase !== 'ended') {
             setIsModalVisible(true)
+        }
+
+        if (phase === 'intro') {
+            setIsHelpVisible(false)
         }
     }, [phase])
 
@@ -130,26 +135,6 @@ export default function Interface() {
     return (
         <>
             <div className={`interface${isVisible ? ' visible' : ''}`}>
-                {/* Time */}
-                <div ref={time} className="time">
-                    0.00
-                </div>
-
-                {/* Restart */}
-                {(phase === 'ended' || phase === 'playing') && (
-                    <div className="restart" onClick={restart}>
-                        Restart
-                    </div>
-                )}
-
-                {/* Pop-up Finish */}
-                {phase === 'ended' && (
-                    <div className={`finish${isModalVisible ? ' visible' : ''}`}>
-                        <p className='text'>Congrats ! You did it 😉! You can retry for a better time or the reverse path.</p>
-                        <button className='btn--small' onClick={() => setIsModalVisible(false)}>Close</button>
-                    </div>
-                )} 
-
                 {/* Map */}
                 <div className="map">
                     {images.map((image, index) => {
@@ -167,6 +152,50 @@ export default function Interface() {
                     })}
                 </div>
 
+                {/* Time */}
+                <div ref={time} className="time">
+                    0.00
+                </div>
+
+                {/* Help */}
+                <div
+                    className="help"
+                    onClick={() => setIsHelpVisible(!isHelpVisible)}
+                >
+                    ?
+                </div>
+
+                <div
+                    className={`help--modal${isHelpVisible ? ' visible' : ''}`}
+                >
+                    <div className="text">
+                        <h3>Helpers</h3>
+                        <p>
+                            Hard to find your way around ? You can use a helper :
+                        </p>
+                        <ul>
+                            <li>Press Left Shift Key to make the cube transparent</li>
+                            <li>Press Left Control Key to see the levels in wireframe</li>
+                        </ul>
+                        <p>Don't overuse it !</p>
+                        <h3>Controls</h3>
+                        <p>Use arrows or WASD keys to rotate the cube.</p>
+                    </div>
+                    <button
+                        className="btn--small"
+                        onClick={() => setIsHelpVisible(false)}
+                    >
+                        Close
+                    </button>
+                </div>
+
+                {/* Restart */}
+                {(phase === 'ended' || phase === 'playing') && (
+                    <div className="restart" onClick={restart}>
+                        Restart
+                    </div>
+                )}
+
                 {/* Controls */}
                 <div className="controls">
                     <div className="raw">
@@ -178,6 +207,24 @@ export default function Interface() {
                         <ControlKey isActive={rightward} />
                     </div>
                 </div>
+
+                {/* Pop-up Finish */}
+                {phase === 'ended' && (
+                    <div
+                        className={`finish${isFinishVisible ? ' visible' : ''}`}
+                    >
+                        <p className="text">
+                            Congrats ! You did it 😉! You can retry for a better
+                            time or the reverse path.
+                        </p>
+                        <button
+                            className="btn--small"
+                            onClick={() => setIsModalVisible(false)}
+                        >
+                            Close
+                        </button>
+                    </div>
+                )}
             </div>
         </>
     )

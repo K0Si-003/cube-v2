@@ -166,6 +166,89 @@ body,
         border-radius: 5px 0 0 5px;
     }
 
+    .help {
+        position: absolute;
+        right: 0;
+        bottom: 15%;
+        color: $light-color;
+        font-size: 2rem;
+        background: #00000030;
+        border: 2px solid $light-color;
+        border-right: none;
+        padding: 10px 30px;
+        pointer-events: auto;
+        cursor: pointer;
+        z-index: 1;
+        border-radius: 5px 0 0 5px;
+
+        &:hover {
+            color: $green-color;
+            border-color: $green-color;
+        }
+    }
+
+    .help--modal {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        height: auto;
+        width: 60%;
+        background: $dark-color;
+        color: $light-color;
+        border: 2px solid $green-color;
+        border-radius: 10px;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+        pointer-events: none;
+
+        &.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .text {
+            padding-left: 20px;
+        }
+
+        .btn--small {
+            display: block;
+            width: 60px;
+            height: 60px;
+            margin: 20px;
+            font-size: 1.1rem;
+            font-weight: light;
+            font-family: 'Outfit', sans-serif;
+            text-transform: uppercase;
+            text-align: center;
+            // line-height: 100px;
+            letter-spacing: -1px;
+            color: $dark-color;
+            border: none;
+            border-radius: 10px;
+            background: $green-color;
+            cursor: pointer;
+            box-shadow: 0 0 0 0 rgba($green-color, 0.5);
+            animation: pulse 1.5s infinite;
+
+            &:hover {
+                animation: none;
+            }
+        }
+
+        @keyframes fade {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+    }
+
     .restart {
         display: flex;
         justify-content: center;
@@ -197,7 +280,7 @@ body,
         margin-left: 4%;
 
         &:before {
-            content: "";
+            content: '';
             display: block;
             background-color: #00000030;
             border: 2px solid $light-color;
@@ -281,8 +364,8 @@ body,
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            height:auto;
-            width:60%;
+            height: auto;
+            width: 60%;
             background: $dark-color;
             color: $light-color;
             border: 2px solid $green-color;
@@ -312,10 +395,10 @@ body,
             cursor: pointer;
             box-shadow: 0 0 0 0 rgba($green-color, 0.5);
             animation: pulse 1.5s infinite;
-    
+
             &:hover {
                 animation: none;
             }
         }
-    } 
+    }
 }
