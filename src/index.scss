@@ -193,7 +193,7 @@ body,
         flex-direction: column;
         justify-content: center;
         height: 100%;
-        margin-left: 50px;
+        margin-left: 4%;
 
         &:before {
             content: "";
@@ -209,7 +209,7 @@ body,
         }
 
         .map--level {
-            width: 7%;
+            width: 6.5%;
             height: auto;
             margin: 1.5% 0;
             filter: invert(25%) grayscale(100%) brightness(120%);
