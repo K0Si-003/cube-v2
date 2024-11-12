@@ -77,14 +77,14 @@ export default function Cube() {
             // Top
             tl.current.from(
                 meshes.current[0].current.position,
-                { duration: 3, y: vh * 0.25, ease: 'slow(0.7,0.7,false)' },
+                { duration: 3, y: vh * 0.55, ease: 'slow(0.7,0.7,false)' },
                 2
             )
 
             // Level 1
             tl.current.from(
                 meshes.current[1].current.position,
-                { duration: 3, y: -vh * 0.25, ease: 'slow(0.7,0.7,false)' },
+                { duration: 3, y: -vh * 0.55, ease: 'slow(0.7,0.7,false)' },
                 0
             )
             tl.current.from(
@@ -96,7 +96,7 @@ export default function Cube() {
             // Level 2
             tl.current.from(
                 meshes.current[2].current.position,
-                { duration: 3, y: -vh * 0.25, ease: 'slow(0.7,0.7,false)' },
+                { duration: 3, y: -vh * 0.55, ease: 'slow(0.7,0.7,false)' },
                 0.5
             )
             tl.current.from(
@@ -108,7 +108,7 @@ export default function Cube() {
             // Level 3
             tl.current.from(
                 meshes.current[3].current.position,
-                { duration: 3, y: -vh * 0.25, ease: 'slow(0.7,0.7,false)' },
+                { duration: 3, y: -vh * 0.55, ease: 'slow(0.7,0.7,false)' },
                 1
             )
             tl.current.from(
@@ -120,7 +120,7 @@ export default function Cube() {
             // Level 4
             tl.current.from(
                 meshes.current[4].current.position,
-                { duration: 3, y: -vh * 0.25, ease: 'slow(0.7,0.7,false)' },
+                { duration: 3, y: -vh * 0.55, ease: 'slow(0.7,0.7,false)' },
                 1.5
             )
             tl.current.from(
@@ -132,14 +132,14 @@ export default function Cube() {
             // Bottom
             tl.current.from(
                 meshes.current[5].current.position,
-                { duration: 3, y: -vh * 0.25, ease: 'slow(0.7,0.7,false)' },
+                { duration: 3, y: -vh * 0.55, ease: 'slow(0.7,0.7,false)' },
                 2
             )
             tl.current.from(
                 meshes.current[6].current.position,
                 {
                     duration: 3,
-                    y: -vh * 0.25,
+                    y: -vh * 0.55,
                     ease: 'slow(0.7,0.7,false)',
                     onComplete: () => {
                         setIsAnimationFinished(true)
