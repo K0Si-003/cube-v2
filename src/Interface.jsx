@@ -29,15 +29,20 @@ export default function Interface() {
     const time = useRef()
     const phase = useGame((state) => state.phase)
     const restart = useGame((state) => state.restart)
-
+    
     /**
-     * Render interface
-     */
-    const [isVisible, setIsVisible] = useState(false)
+     * Render interface / modal
+    */
+   const [isVisible, setIsVisible] = useState(false)
+   const [isModalVisible, setIsModalVisible] = useState(true)
 
     useEffect(() => {
         if (phase !== 'loading' && phase !== 'intro') {
             setIsVisible(true)
+        }
+
+        if (phase !== 'ended') {
+            setIsModalVisible(true)
         }
     }, [phase])
 
@@ -136,6 +141,14 @@ export default function Interface() {
                         Restart
                     </div>
                 )}
+
+                {/* Pop-up Finish */}
+                {phase === 'ended' && (
+                    <div className={`finish${isModalVisible ? ' visible' : ''}`}>
+                        <p className='text'>Congrats ! You did it 😉! You can retry for a better time or the reverse path.</p>
+                        <button className='btn--small' onClick={() => setIsModalVisible(false)}>Close</button>
+                    </div>
+                )} 
 
                 {/* Map */}
                 <div className="map">
