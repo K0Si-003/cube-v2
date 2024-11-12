@@ -200,8 +200,8 @@ body,
             display: block;
             background-color: #00000030;
             border: 2px solid $light-color;
-            height: 80%;
-            width: 315px;
+            height: 98%;
+            width: 20%;
             position: absolute;
             top: 50%;
             transform: translate(-50%, -50%);
@@ -209,9 +209,9 @@ body,
         }
 
         .map--level {
-            width: 100px;
+            width: 6%;
             height: auto;
-            margin: 30px 0;
+            margin: 2% 0;
             filter: grayscale(1) brightness(150%);
             transition: transform 0.3s ease;
         }
