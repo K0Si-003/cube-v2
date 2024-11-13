@@ -171,11 +171,11 @@ body,
         right: 0;
         bottom: 15%;
         color: $light-color;
-        font-size: 2rem;
+        font-size: 1.8rem;
         background: #00000030;
         border: 2px solid $light-color;
         border-right: none;
-        padding: 10px 30px;
+        padding: 8px 30px;
         pointer-events: auto;
         cursor: pointer;
         z-index: 1;
@@ -196,7 +196,7 @@ body,
         left: 50%;
         transform: translate(-50%, -50%);
         height: auto;
-        width: 60%;
+        width: 50%;
         background: $dark-color;
         color: $light-color;
         border: 2px solid $green-color;
@@ -256,11 +256,11 @@ body,
         right: 0;
         bottom: 5%;
         color: $light-color;
-        font-size: 2rem;
+        font-size: 1.8rem;
         background: #00000030;
         border: 2px solid $light-color;
         border-right: none;
-        padding: 10px 30px;
+        padding: 8px 30px;
         pointer-events: auto;
         cursor: pointer;
         z-index: 1;
@@ -281,7 +281,7 @@ body,
         top: 50%;
         transform: translateY(-50%);
         height: auto;
-        width: 20%;
+        width: 18%;
         background-color: #00000030;
         border: 2px solid $light-color;
         border-left: none;
