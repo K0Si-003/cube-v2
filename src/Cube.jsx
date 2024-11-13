@@ -69,7 +69,10 @@ export default function Cube() {
         const unsubscribeReset = useGame.subscribe(
             (state) => state.phase,
             (value) => {
-                if (value === 'intro') resetCube()
+                if (value === 'intro') {
+                    setIsAnimationFinished(false)
+                    resetCube()
+                }   
             }
         )
     
