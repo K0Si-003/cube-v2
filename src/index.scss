@@ -354,6 +354,10 @@ body,
         transform: translateX(-50%);
         font-family: 'Outfit', sans-serif;
         color: $light-color;
+
+        p {
+            margin: 5px 0;
+        }
     }
 
     .finish {
