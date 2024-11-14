@@ -208,6 +208,11 @@ export default function Interface() {
                     </div>
                 </div>
 
+                {/* Credits */}
+                <div className="credits">
+                    <p>Inspired by INSIDE³ Cube - Made by Kosi</p>
+                </div>
+
                 {/* Pop-up Finish */}
                 {phase === 'ended' && (
                     <div
