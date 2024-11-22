@@ -36,7 +36,7 @@ export default function Cube() {
      * Material
      */
     const boxMaterial = new THREE.MeshStandardMaterial({
-        color: '#94ac3c',
+        color: '#a9c52f',
         metalness: '0.6',
         roughness: '0.7',
         transparent: transparency,
@@ -69,7 +69,10 @@ export default function Cube() {
         const unsubscribeReset = useGame.subscribe(
             (state) => state.phase,
             (value) => {
-                if (value === 'intro') resetCube()
+                if (value === 'intro') {
+                    setIsAnimationFinished(false)
+                    resetCube()
+                }   
             }
         )
     
@@ -77,14 +80,14 @@ export default function Cube() {
             // Top
             tl.current.from(
                 meshes.current[0].current.position,
-                { duration: 3, y: vh * 0.25, ease: 'slow(0.7,0.7,false)' },
+                { duration: 3, y: vh * 0.55, ease: 'slow(0.7,0.7,false)' },
                 2
             )
 
             // Level 1
             tl.current.from(
                 meshes.current[1].current.position,
-                { duration: 3, y: -vh * 0.25, ease: 'slow(0.7,0.7,false)' },
+                { duration: 3, y: -vh * 0.55, ease: 'slow(0.7,0.7,false)' },
                 0
             )
             tl.current.from(
@@ -96,7 +99,7 @@ export default function Cube() {
             // Level 2
             tl.current.from(
                 meshes.current[2].current.position,
-                { duration: 3, y: -vh * 0.25, ease: 'slow(0.7,0.7,false)' },
+                { duration: 3, y: -vh * 0.55, ease: 'slow(0.7,0.7,false)' },
                 0.5
             )
             tl.current.from(
@@ -108,7 +111,7 @@ export default function Cube() {
             // Level 3
             tl.current.from(
                 meshes.current[3].current.position,
-                { duration: 3, y: -vh * 0.25, ease: 'slow(0.7,0.7,false)' },
+                { duration: 3, y: -vh * 0.55, ease: 'slow(0.7,0.7,false)' },
                 1
             )
             tl.current.from(
@@ -120,7 +123,7 @@ export default function Cube() {
             // Level 4
             tl.current.from(
                 meshes.current[4].current.position,
-                { duration: 3, y: -vh * 0.25, ease: 'slow(0.7,0.7,false)' },
+                { duration: 3, y: -vh * 0.55, ease: 'slow(0.7,0.7,false)' },
                 1.5
             )
             tl.current.from(
@@ -132,14 +135,14 @@ export default function Cube() {
             // Bottom
             tl.current.from(
                 meshes.current[5].current.position,
-                { duration: 3, y: -vh * 0.25, ease: 'slow(0.7,0.7,false)' },
+                { duration: 3, y: -vh * 0.55, ease: 'slow(0.7,0.7,false)' },
                 2
             )
             tl.current.from(
                 meshes.current[6].current.position,
                 {
                     duration: 3,
-                    y: -vh * 0.25,
+                    y: -vh * 0.55,
                     ease: 'slow(0.7,0.7,false)',
                     onComplete: () => {
                         setIsAnimationFinished(true)
@@ -247,6 +250,8 @@ export default function Cube() {
                         scale={[0.2, 0.2, 0.2]}
                         restitution={0.2}
                         friction={0}
+                        castShadow
+                        receiveShadow
                         onCollisionEnter={({ target }) => {
                             if (
                                 cubePart.name === 'Finish' &&

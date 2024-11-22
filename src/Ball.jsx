@@ -11,11 +11,6 @@ export default function Ball() {
 
     const [levelPosition, setLevelPosition] = useState(null)
 
-    const [isAsleep, setIsAsleep] = useState(false)
-
-    const [smoothCameraPosition] = useState(() => new THREE.Vector3(0, 50, 25))
-    const [smoothCameraTarget] = useState(() => new THREE.Vector3())
-
     // Store data
     const changePosition = useGame((state) => state.changePosition)
 
@@ -81,15 +76,12 @@ export default function Ball() {
 
             const cameraPosition = new THREE.Vector3()
             cameraPosition.copy(bodyPosition)
-            cameraPosition.z += 45
-            cameraPosition.y += 35
+            cameraPosition.z += 35
+            cameraPosition.y += 30
 
             const cameraTarget = new THREE.Vector3()
             cameraTarget.copy(bodyPosition)
-            cameraTarget.y += 0
-
-            // smoothCameraPosition.lerp(cameraPosition, 5 * delta)
-            // smoothCameraTarget.lerp(cameraTarget, 5 * delta)
+            cameraTarget.y += -7.5
 
             state.camera.position.copy(cameraPosition)
             state.camera.lookAt(cameraTarget)
@@ -101,8 +93,6 @@ export default function Ball() {
             name="ball"
             ref={ball}
             canSleep={false}
-            onSleep={() => setIsAsleep(true)}
-            onWake={() => setIsAsleep(false)}
             position={[-7, 10, -2]}
             colliders="ball"
             restitution={0.2}
