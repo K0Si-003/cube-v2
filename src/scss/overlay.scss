@@ -1,0 +1,90 @@
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    color: $light-color;
+    opacity: 1;
+    z-index: 1;
+
+    &--completed {
+        opacity: 0;
+        transition: opacity 2s ease 0.5s;
+
+        [class*='title'],
+        [class*='text'],
+        [class*='btn'] {
+            display: none;
+        }
+    }
+}
+
+.overlay__landing {
+    @include flexbox-column-center;
+    width: 100%;
+    height: 100%;
+    background-color: $second-dark-color;
+}
+
+.overlay__rules {
+    bottom: -100%;
+
+    &--loaded {
+        @include flexbox-column-center;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: $dark-color;
+        transition: bottom 0.4s ease;
+    }
+}
+
+.landing__title,
+.rules__title {
+    font-size: 4rem;
+    font-weight: bold;
+
+    @include respond-to('small') {
+        font-size: 2rem;
+    }
+}
+
+.landing__loading {
+    margin-top: 2rem;
+    font-size: 2rem;
+    font-weight: 300;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+
+    @include respond-to('small') {
+        margin-top: 1.4rem;
+        font-size: 1.4rem;
+    }
+}
+
+.rules__title {
+    margin: 1% 0;
+
+    @include respond-to('small') {
+        margin: 5% 0;
+    }
+}
+
+.rules__text {
+    margin: 1% 0;
+    padding: 0 5%;
+    font-size: 1.5rem;
+    font-weight: 300;
+
+    @include respond-to('small') {
+        font-size: 1.2rem;
+        align-self: flex-start;
+    }
+}
+
+.rules__btn {
+    margin-top: 30px;
+}
