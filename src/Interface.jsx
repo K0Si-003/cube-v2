@@ -35,7 +35,7 @@ export default function Interface() {
      */
     const [isVisible, setIsVisible] = useState(false)
     const [isFinishVisible, setIsModalVisible] = useState(true)
-    const [isHelpVisible, setIsHelpVisible] = useState(false)
+    const [isHelpOpen, setIsHelpOpen] = useState(false)
 
     useEffect(() => {
         if (phase !== 'loading' && phase !== 'intro') {
@@ -47,7 +47,7 @@ export default function Interface() {
         }
 
         if (phase === 'intro') {
-            setIsHelpVisible(false)
+            setIsHelpOpen(false)
         }
     }, [phase])
 
@@ -77,7 +77,7 @@ export default function Interface() {
     const rightward = useKeyboardControls((state) => state.rightward)
 
     const ControlKey = ({ isActive }) => (
-        <div className={`key ${isActive ? 'active' : ''}`}>↑</div>
+        <div className={`key${isActive ? ' active' : ''}`}>↑</div>
     )
 
     /**
@@ -134,9 +134,9 @@ export default function Interface() {
 
     return (
         <>
-            <div className={`interface${isVisible ? ' visible' : ''}`}>
+            <div className={`interface${isVisible ? '--visible' : ''}`}>
                 {/* Map */}
-                <div className="map">
+                <div className="interface__map">
                     {images.map((image, index) => {
                         return (
                             <img
@@ -144,81 +144,104 @@ export default function Interface() {
                                 key={image}
                                 src={image}
                                 alt="map"
-                                className={`map--level${
-                                    activLevel === index ? ' active' : ''
+                                className={`map__level${
+                                    activLevel === index ? '--active' : ''
                                 }`}
                             />
                         )
                     })}
                 </div>
 
-                {/* Time */}
-                <div ref={time} className="time">
-                    0.00
-                </div>
-
-                {/* Help */}
-                <div
-                    className="help"
-                    onClick={() => setIsHelpVisible(!isHelpVisible)}
-                >
-                    ?
-                </div>
-
-                <div
-                    className={`help--modal${isHelpVisible ? ' visible' : ''}`}
-                >
-                    <div className="text">
-                        <h3>Helpers</h3>
-                        <p>
-                            Hard to find your way around ? You can use a helper :
-                        </p>
-                        <ul>
-                            <li>Press Left Shift Key to make the cube transparent</li>
-                            <li>Press Left Control Key to see the levels in wireframe</li>
-                        </ul>
-                        <p>Don't overuse it !</p>
-                        <h3>Controls</h3>
-                        <p>Use arrows or WASD keys to rotate the cube.</p>
-                    </div>
-                    <button
-                        className="btn--small"
-                        onClick={() => setIsHelpVisible(false)}
-                    >
-                        Close
-                    </button>
-                </div>
-
-                {/* Restart */}
-                {(phase === 'ended' || phase === 'playing') && (
-                    <div className="restart" onClick={restart}>
-                        Restart
-                    </div>
-                )}
-
                 {/* Controls */}
-                <div className="controls">
-                    <div className="raw">
+                <div className="interface__controls">
+                    <div className="row">
                         <ControlKey isActive={forward} />
                     </div>
-                    <div className="raw">
+                    <div className="row">
                         <ControlKey isActive={leftward} />
                         <ControlKey isActive={backward} />
                         <ControlKey isActive={rightward} />
                     </div>
                 </div>
 
+                {/* Time */}
+                <div ref={time} className="interface__time">
+                    0.00
+                </div>
+
+                {/* Restart */}
+                {(phase === 'ended' || phase === 'playing') && (
+                    <div className="interface__restart" onClick={restart}>
+                        Restart
+                    </div>
+                )}
+
                 {/* Credits */}
-                <div className="credits">
-                    <p>Inspired by INSIDE³ Cube - Made by Kosi</p>
+                <div className="interface__credits">
+                    <span className="credits__text">
+                        Inspired by INSIDE³ Cube
+                    </span>
+                    <span className='credits__dash'>-</span>
+                    <span className="credits__text">
+                        Made by{' '}
+                        <a
+                            href="https://github.com/K0Si-003"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            Kosi
+                        </a>
+                    </span>
+                </div>
+
+                {/* Help */}
+                <div className="interface__help">
+                    <button
+                        className="help__button"
+                        onClick={() => setIsHelpOpen(!isHelpOpen)}
+                    >
+                        ?
+                    </button>
+                    <div
+                        className={`help__modal${
+                            isHelpOpen ? '--visible' : ''
+                        }`}
+                    >
+                        <div className="modal__content">
+                            <h3>Helpers</h3>
+                            <p>
+                                Hard to find your way around ? You can use a
+                                helper :
+                            </p>
+                            <ul>
+                                <li>
+                                    Press Left Shift Key to make the cube
+                                    transparent
+                                </li>
+                                <li>
+                                    Press Left Control Key to see the levels in
+                                    wireframe
+                                </li>
+                            </ul>
+                            <p>Don't overuse it !</p>
+                            <h3>Controls</h3>
+                            <p>Use arrows or WASD keys to rotate the cube.</p>
+                        </div>
+                        <button
+                            className="btn--small"
+                            onClick={() => setIsHelpOpen(false)}
+                        >
+                            Close
+                        </button>
+                    </div>
                 </div>
 
                 {/* Pop-up Finish */}
                 {phase === 'ended' && (
                     <div
-                        className={`finish${isFinishVisible ? ' visible' : ''}`}
+                        className={`interface__finish${isFinishVisible ? '--visible' : ''}`}
                     >
-                        <p className="text">
+                        <p className="finish__text">
                             Congrats ! You did it 😉! You can retry for a better
                             time or the reverse path.
                         </p>
