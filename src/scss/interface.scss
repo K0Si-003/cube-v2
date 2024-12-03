@@ -30,7 +30,7 @@
         margin: 8% 0;
         filter: invert(25%) grayscale(100%) brightness(120%);
         transition: all 0.3s ease;
-    
+
         &--active {
             width: 35%;
             margin: 8% 0;
@@ -54,7 +54,7 @@
             margin: 4% 2%;
             filter: invert(25%) grayscale(100%) brightness(120%);
             transition: all 0.3s ease;
-        
+
             &--active {
                 width: 18%;
                 margin: 4% 0;
@@ -62,11 +62,8 @@
                 filter: invert(0%);
             }
         }
-
     }
 }
-
-
 
 .interface__controls {
     position: absolute;
@@ -112,6 +109,15 @@
             background: $dark-color;
             border-color: $green-color;
         }
+    }
+
+    .controls__joystick {
+        position: absolute;
+        bottom: 5%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        height: fit-content;
     }
 }
 
@@ -235,7 +241,7 @@
 
 .interface__restart {
     display: flex;
-    justify-content: center; 
+    justify-content: center;
     position: absolute;
     right: 0;
     bottom: 5%;
@@ -290,6 +296,4 @@
     .finish__text {
         font-size: 1.2rem;
     }
-
-
 }

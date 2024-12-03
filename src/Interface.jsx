@@ -1,7 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { useKeyboardControls } from '@react-three/drei'
 import useGame from './store/useGame.js'
+import useControls from './store/useControls.js'
 import { addEffect } from '@react-three/fiber'
+import { isMobile, isDesktop } from 'react-device-detect'
+import { Joystick } from 'react-joystick-component'
 
 const images = [
     '/images/lvl-1.png',
@@ -11,18 +14,18 @@ const images = [
     '/images/bottom.png',
 ]
 
-const preloadImages = (imageArray) => {
-    return Promise.all(
-        imageArray.map((src) => {
-            return new Promise((resolve, reject) => {
-                const img = new Image()
-                img.src = src
-                img.onload = () => resolve(src)
-                img.onerror = () =>
-                    reject(new Error(`Failed to load image: ${src}`))
-            })
+const preloadImages = async (imagesArray) => {
+    const promises = imagesArray.map((src) =>
+        new Promise((resolve, reject) => {
+            const img = new Image()
+            img.onload = () => resolve(src)
+            img.onerror = () =>
+                reject(new Error(`Failed to load image: ${src}`))
+            img.src = src
         })
     )
+
+    await Promise.allSettled(promises)
 }
 
 export default function Interface() {
@@ -34,7 +37,7 @@ export default function Interface() {
      * Render interface / modal
      */
     const [isVisible, setIsVisible] = useState(false)
-    const [isFinishVisible, setIsModalVisible] = useState(true)
+    const [isModalVisible, setIsModalVisible] = useState(true)
     const [isHelpOpen, setIsHelpOpen] = useState(false)
 
     useEffect(() => {
@@ -69,18 +72,6 @@ export default function Interface() {
     }, [])
 
     /**
-     * Controls
-     */
-    const forward = useKeyboardControls((state) => state.forward)
-    const backward = useKeyboardControls((state) => state.backward)
-    const leftward = useKeyboardControls((state) => state.leftward)
-    const rightward = useKeyboardControls((state) => state.rightward)
-
-    const ControlKey = ({ isActive }) => (
-        <div className={`key${isActive ? ' active' : ''}`}>↑</div>
-    )
-
-    /**
      * Level maps
      */
     const [activLevel, setActivLevel] = useState(0)
@@ -108,6 +99,49 @@ export default function Interface() {
     }, [ballPosition])
 
     /**
+     * Controls
+     */
+    // Desktop with keyboard
+    const forward = useKeyboardControls((state) => state.forward)
+    const backward = useKeyboardControls((state) => state.backward)
+    const leftward = useKeyboardControls((state) => state.leftward)
+    const rightward = useKeyboardControls((state) => state.rightward)
+
+    // Mobile with click
+    const forwardStore = useControls((state) => state.forward)
+    const rightwardStore = useControls((state) => state.rightward)
+    const backwardStore = useControls((state) => state.backward)
+    const leftwardStore = useControls((state) => state.leftward)
+    const setClickControls = useControls((state) => state.setClickControls)
+
+    const ControlKey = memo(({ isActive }) => {
+        return <div className={`key${isActive ? ' active' : ''}`}>↑</div>
+    })
+
+    const joystickMove = useCallback((event) => {
+        switch (event.direction) {
+            case 'FORWARD':
+                setClickControls(true, false, false, false)
+                break
+            case 'RIGHT':
+                setClickControls(false, true, false, false)
+                break
+            case 'BACKWARD':
+                setClickControls(false, false, true, false)
+                break
+            case 'LEFT':
+                setClickControls(false, false, false, true)
+                break
+            default:
+                break
+        }
+    }, [])
+
+    const joystickStop = useCallback(() => {
+        setClickControls(false, false, false, false)
+    }, [])
+
+    /**
      * Timer
      */
     useEffect(() => {
@@ -122,9 +156,18 @@ export default function Interface() {
                 elapsedTime = state.endTime - state.startTime
 
             elapsedTime /= 1000
-            elapsedTime = elapsedTime.toFixed(1)
+            elapsedTime = elapsedTime.toFixed()
 
-            if (time.current) time.current.textContent = elapsedTime
+            const minutes = Math.floor(elapsedTime / 60)
+            const seconds = elapsedTime % 60
+
+            function padTo2Digits(number) {
+                return number.toString().padStart(2, '0');
+            }
+
+            const result = `${(minutes)}:${padTo2Digits(seconds)}`
+
+            if (time.current) time.current.textContent = result
         })
 
         return () => {
@@ -154,14 +197,32 @@ export default function Interface() {
 
                 {/* Controls */}
                 <div className="interface__controls">
-                    <div className="row">
-                        <ControlKey isActive={forward} />
-                    </div>
-                    <div className="row">
-                        <ControlKey isActive={leftward} />
-                        <ControlKey isActive={backward} />
-                        <ControlKey isActive={rightward} />
-                    </div>
+                    {isDesktop && (
+                        <div className="controls_keys">
+                            <div className="row">
+                                <ControlKey isActive={forward} />
+                            </div>
+                            <div className="row">
+                                <ControlKey isActive={leftward} />
+                                <ControlKey isActive={backward} />
+                                <ControlKey isActive={rightward} />
+                            </div>
+                        </div>
+                    )}
+                    {isMobile && (
+                        <div className="controls__joystick">
+                            <Joystick
+                                baseColor={'#283739'}
+                                stickColor={'#a9c52f'}
+                                size={90}
+                                stickSize={55}
+                                baseShape='square'
+                                throttle={100}
+                                move={joystickMove}
+                                stop={joystickStop}
+                            />
+                        </div>
+                    )}
                 </div>
 
                 {/* Time */}
@@ -181,7 +242,7 @@ export default function Interface() {
                     <span className="credits__text">
                         Inspired by INSIDE³ Cube
                     </span>
-                    <span className='credits__dash'>-</span>
+                    <span className="credits__dash">-</span>
                     <span className="credits__text">
                         Made by{' '}
                         <a
@@ -239,7 +300,9 @@ export default function Interface() {
                 {/* Pop-up Finish */}
                 {phase === 'ended' && (
                     <div
-                        className={`interface__finish${isFinishVisible ? '--visible' : ''}`}
+                        className={`interface__finish${
+                            isModalVisible ? '--visible' : ''
+                        }`}
                     >
                         <p className="finish__text">
                             Congrats ! You did it 😉! You can retry for a better

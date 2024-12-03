@@ -5,6 +5,8 @@ import { useEffect, useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
 import gsap from 'gsap'
 import useGame from './store/useGame.js'
+import useControls from './store/useControls.js'
+import { isDesktop, isMobile } from 'react-device-detect'
 
 export default function Cube() {
     /**
@@ -28,6 +30,11 @@ export default function Cube() {
     const ready = useGame((state) => state.ready)
     const start = useGame((state) => state.start)
     const end = useGame((state) => state.end)
+
+    const forwardStore = useControls((state) => state.forward)
+    const rightwardStore = useControls((state) => state.rightward)
+    const backwardStore = useControls((state) => state.backward)
+    const leftwardStore = useControls((state) => state.leftward)
 
     // Enter animation state
     const [isAnimationFinished, setIsAnimationFinished] = useState(false)
@@ -212,10 +219,19 @@ export default function Cube() {
             }
 
             // Rotate cube depending keys pressed
-            if (forward) updateRotation('x', -1)
-            if (backward) updateRotation('x', 1)
-            if (leftward) updateRotation('z', 1)
-            if (rightward) updateRotation('z', -1)
+            if (isDesktop) {
+                if (forward) updateRotation('x', -1)
+                if (backward) updateRotation('x', 1)
+                if (leftward) updateRotation('z', 1)
+                if (rightward) updateRotation('z', -1)
+            }
+
+            if (isMobile) {
+                if (forwardStore) updateRotation('x', -1)
+                if (backwardStore) updateRotation('x', 1)
+                if (leftwardStore) updateRotation('z', 1)
+                if (rightwardStore) updateRotation('z', -1)
+            }
 
             /**
              * Helpers
