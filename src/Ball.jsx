@@ -4,6 +4,7 @@ import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import useGame from './store/useGame.js'
 import { gsap } from 'gsap'
+import { isDesktop, isMobile } from 'react-device-detect'
 
 export default function Ball() {
     const ball = useRef()
@@ -76,8 +77,16 @@ export default function Ball() {
 
             const cameraPosition = new THREE.Vector3()
             cameraPosition.copy(bodyPosition)
-            cameraPosition.z += 35
-            cameraPosition.y += 30
+
+            if (isDesktop) {
+                cameraPosition.z += 35
+                cameraPosition.y += 30
+            }
+
+            if (isMobile) {
+                cameraPosition.z += 45
+                cameraPosition.y += 35
+            }
 
             const cameraTarget = new THREE.Vector3()
             cameraTarget.copy(bodyPosition)
