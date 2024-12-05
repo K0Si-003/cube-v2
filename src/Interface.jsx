@@ -15,14 +15,15 @@ const images = [
 ]
 
 const preloadImages = async (imagesArray) => {
-    const promises = imagesArray.map((src) =>
-        new Promise((resolve, reject) => {
-            const img = new Image()
-            img.onload = () => resolve(src)
-            img.onerror = () =>
-                reject(new Error(`Failed to load image: ${src}`))
-            img.src = src
-        })
+    const promises = imagesArray.map(
+        (src) =>
+            new Promise((resolve, reject) => {
+                const img = new Image()
+                img.onload = () => resolve(src)
+                img.onerror = () =>
+                    reject(new Error(`Failed to load image: ${src}`))
+                img.src = src
+            })
     )
 
     await Promise.allSettled(promises)
@@ -101,22 +102,20 @@ export default function Interface() {
     /**
      * Controls
      */
+    const ControlKey = memo(({ isActive }) => {
+        return <div className={`key${isActive ? ' active' : ''}`}>↑</div>
+    })
+
     // Desktop with keyboard
     const forward = useKeyboardControls((state) => state.forward)
     const backward = useKeyboardControls((state) => state.backward)
     const leftward = useKeyboardControls((state) => state.leftward)
     const rightward = useKeyboardControls((state) => state.rightward)
 
-    // Mobile with click
-    const forwardStore = useControls((state) => state.forward)
-    const rightwardStore = useControls((state) => state.rightward)
-    const backwardStore = useControls((state) => state.backward)
-    const leftwardStore = useControls((state) => state.leftward)
+    // Mobile with joystick and click
     const setClickControls = useControls((state) => state.setClickControls)
-
-    const ControlKey = memo(({ isActive }) => {
-        return <div className={`key${isActive ? ' active' : ''}`}>↑</div>
-    })
+    const setBoxHelper = useControls((state) => state.setBoxHelper)
+    const setLevelHelper = useControls((state) => state.setLevelHelper)
 
     const joystickMove = useCallback((event) => {
         switch (event.direction) {
@@ -136,10 +135,12 @@ export default function Interface() {
                 break
         }
     }, [])
+    const joystickStop = () => setClickControls(false, false, false, false)
 
-    const joystickStop = useCallback(() => {
-        setClickControls(false, false, false, false)
-    }, [])
+    const touchStartBoxHelper = () => setBoxHelper(true)
+    const touchEndBoxHelper = () => setBoxHelper(false)
+    const touchStartLevelHelper = () => setLevelHelper(true)
+    const touchEndLevelHelper = () => setLevelHelper(false)
 
     /**
      * Timer
@@ -162,10 +163,10 @@ export default function Interface() {
             const seconds = elapsedTime % 60
 
             function padTo2Digits(number) {
-                return number.toString().padStart(2, '0');
+                return number.toString().padStart(2, '0')
             }
 
-            const result = `${(minutes)}:${padTo2Digits(seconds)}`
+            const result = `${minutes}:${padTo2Digits(seconds)}`
 
             if (time.current) time.current.textContent = result
         })
@@ -216,7 +217,7 @@ export default function Interface() {
                                 stickColor={'#a9c52f'}
                                 size={90}
                                 stickSize={55}
-                                baseShape='square'
+                                baseShape="square"
                                 throttle={100}
                                 move={joystickMove}
                                 stop={joystickStop}
@@ -263,6 +264,34 @@ export default function Interface() {
                     >
                         ?
                     </button>
+                    {isMobile && (
+                        <div className="help__button--mobile">
+                            <div
+                                className="help__box"
+                                onTouchStart={touchStartBoxHelper}
+                                onTouchEnd={touchEndBoxHelper}
+                            >
+                                <img
+                                    className="box__img"
+                                    src="./images/icon-box.png"
+                                    alt="Green box icon with perspective"
+                                    draggable="false"
+                                />
+                            </div>
+                            <div
+                                className="help__level"
+                                onTouchStart={touchStartLevelHelper}
+                                onTouchEnd={touchEndLevelHelper}
+                            >
+                                <img
+                                    className="level__img"
+                                    src="./images/icon-level.png"
+                                    alt="Level icon with perspective"
+                                />
+                            </div>
+                        </div>
+                    )}
+
                     <div
                         className={`help__modal${
                             isHelpOpen ? '--visible' : ''
@@ -276,17 +305,23 @@ export default function Interface() {
                             </p>
                             <ul>
                                 <li>
-                                    Press Left Shift Key to make the cube
-                                    transparent
+                                    {isMobile
+                                        ? 'Touch the box icon to make the cube transparent'
+                                        : 'Press Left Shift Key to make the cube transparent'}
                                 </li>
                                 <li>
-                                    Press Left Control Key to see the levels in
-                                    wireframe
+                                    {isMobile
+                                        ? 'Touch the level icon to see levels in wireframe'
+                                        : 'Press Left Control Key to see the levels in wireframe'}
                                 </li>
                             </ul>
                             <p>Don't overuse it !</p>
                             <h3>Controls</h3>
-                            <p>Use arrows or WASD keys to rotate the cube.</p>
+                            <p>
+                                {isMobile
+                                    ? 'Use the joystick to rotate the cube'
+                                    : 'Use arrows or WASD keys to rotate the cube.'}
+                            </p>
                         </div>
                         <button
                             className="btn--small"
@@ -305,8 +340,8 @@ export default function Interface() {
                         }`}
                     >
                         <p className="finish__text">
-                            Congrats ! You did it 😉! You can retry for a better
-                            time or the reverse path.
+                            Congrats 🎉! You did it 😉! You can retry for a
+                            better time or the reverse path.
                         </p>
                         <button
                             className="btn--small"

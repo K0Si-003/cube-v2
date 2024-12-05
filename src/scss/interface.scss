@@ -71,6 +71,10 @@
     left: 0;
     width: 100%;
 
+    @include respond-to('small') {
+        bottom: 10%;
+    }
+
     .row {
         display: flex;
         justify-content: center;
@@ -112,12 +116,9 @@
     }
 
     .controls__joystick {
-        position: absolute;
-        bottom: 5%;
         width: 100%;
         display: flex;
         justify-content: center;
-        height: fit-content;
     }
 }
 
@@ -138,7 +139,7 @@
         margin: 5px 0;
 
         @include respond-to('small') {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
         }
     }
 }
@@ -161,6 +162,7 @@
         font-size: 1.5rem;
         width: 20%;
         top: 15%;
+        padding: 3px 5px;
     }
 }
 
@@ -188,12 +190,43 @@
             font-size: 1.5rem;
             width: 15%;
             left: 0;
-            padding: 5px 25px;
+            padding: 5px 15px;
             bottom: 13%;
             border: 2px solid $light-color;
             border-radius: 0 5px 5px 0;
             border-left: none;
         }
+    }
+
+    .help__box,
+    .help__level {
+        position: absolute;
+        right: 0;
+        background: #00000030;
+        border: 2px solid $light-color;
+        border-right: none;
+        padding: 10px 15px;
+        pointer-events: auto;
+        cursor: pointer;
+        border-radius: 5px 0 0 5px;
+
+        .box__img,
+        .level__img {
+            width: 30px;
+            user-select: none;
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            pointer-events: none;
+        }
+    }
+
+    .help__box {
+        bottom: 20%;
+    }
+
+    .help__level {
+        bottom: 8%;
     }
 
     .help__modal {
@@ -215,6 +248,7 @@
             border: 2px solid $green-color;
             border-radius: 10px;
             pointer-events: auto;
+            z-index: 1;
             opacity: 1;
             transition: opacity 0.5s ease;
 
@@ -253,8 +287,8 @@
     padding: 8px 30px;
     pointer-events: auto;
     cursor: pointer;
-    z-index: 1;
     border-radius: 5px 0 0 5px;
+    z-index: 1;
 
     &:hover {
         color: $green-color;
@@ -264,8 +298,15 @@
     @include respond-to('small') {
         font-size: 1.5rem;
         width: auto;
-        padding: 5px 25px;
-        bottom: 13%;
+        padding: 3px 15px;
+        top: 15%;
+        right: auto;
+        bottom: auto;
+        left: 0;
+        border-radius: 0 5px 5px 0;
+        border-left: none;
+        border-right: 2px solid;
+        pointer-events: auto;
     }
 }
 

@@ -31,10 +31,12 @@ export default function Cube() {
     const start = useGame((state) => state.start)
     const end = useGame((state) => state.end)
 
-    const forwardStore = useControls((state) => state.forward)
-    const rightwardStore = useControls((state) => state.rightward)
-    const backwardStore = useControls((state) => state.backward)
-    const leftwardStore = useControls((state) => state.leftward)
+    const { forward: forwardStore, rightward: rightwardStore, backward: backwardStore, leftward: leftwardStore } = useControls()
+
+    const boxHelper = useControls((state) => state.boxHelper)
+    const levelHelper = useControls((state) => state.levelHelper)
+    const setBoxHelper = useControls((state) => state.setBoxHelper)
+    const setLevelHelper = useControls((state) => state.setLevelHelper)
 
     // Enter animation state
     const [isAnimationFinished, setIsAnimationFinished] = useState(false)
@@ -79,10 +81,10 @@ export default function Cube() {
                 if (value === 'intro') {
                     setIsAnimationFinished(false)
                     resetCube()
-                }   
+                }
             }
         )
-    
+
         if (phase === 'intro') {
             // Top
             tl.current.from(
@@ -114,7 +116,7 @@ export default function Cube() {
                 { duration: 3, y: -Math.PI * 0.5, ease: 'slow(0.7,0.7,false)' },
                 0.5
             )
-    
+
             // Level 3
             tl.current.from(
                 meshes.current[3].current.position,
@@ -126,7 +128,7 @@ export default function Cube() {
                 { duration: 3, y: Math.PI * 0.5, ease: 'slow(0.7,0.7,false)' },
                 1
             )
-    
+
             // Level 4
             tl.current.from(
                 meshes.current[4].current.position,
@@ -138,7 +140,7 @@ export default function Cube() {
                 { duration: 3, y: -Math.PI * 0.5, ease: 'slow(0.7,0.7,false)' },
                 1.5
             )
-    
+
             // Bottom
             tl.current.from(
                 meshes.current[5].current.position,
@@ -164,7 +166,6 @@ export default function Cube() {
             tl.current.kill() // Clean timeline
             unsubscribeReset()
         }
-        
     }, [phase])
 
     /**
@@ -234,20 +235,16 @@ export default function Cube() {
             }
 
             /**
-             * Helpers
+             * Helpers for cube transparency and levels wireframe
              */
-            // // Set boxMaterial transparent
-            if (transparent) {
-                setTransparency(true)
-            } else {
-                setTransparency(false)
+            if (isDesktop) {
+                setTransparency(transparent)
+                setIsWireframe(wireframe)
             }
 
-            // // Set levelMaterial wireframe
-            if (wireframe) {
-                setIsWireframe(true)
-            } else {
-                setIsWireframe(false)
+            if (isMobile) {
+                setTransparency(boxHelper)
+                setIsWireframe(levelHelper)
             }
         }
     })

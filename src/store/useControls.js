@@ -11,8 +11,12 @@ export default create(
             rightward: false,
             backward: false,
             leftward: false,
+            boxHelper: false,
+            levelHelper: false,
 
-            setClickControls: (forward, rightward, backward, leftward) => set({ forward, rightward, backward, leftward })
+            setClickControls: (forward, rightward, backward, leftward) => set({ forward, rightward, backward, leftward }),
+            setBoxHelper: (boxHelper) => set({ boxHelper }),
+            setLevelHelper: (levelHelper) => set({ levelHelper })
         }
     })
 )
