@@ -9,22 +9,14 @@ export default create(
              */
             imagesLoaded: false,
 
-            setImagesLoadingStatus: () => {
-                set(() => {
-                    return { imagesLoaded: true }
-                })
-            },
+            setImagesLoadingStatus: () => set({ imagesLoaded: true }),
 
             /**
              * ballPosition
              */
             ballPosition: null,
-
-            changePosition: (newPosition) => {
-                set(() => {
-                    return { ballPosition: newPosition }
-                })
-            },
+            
+            changePosition: (newPosition) => set({ ballPosition: newPosition }),
 
             /**
              * Time
@@ -52,22 +44,9 @@ export default create(
                 })
             },
 
-            start: () => {
-                set((state) => {
-                    if (state.phase === 'ready')
-                        return { phase: 'playing', startTime: Date.now() }
-                    return {}
-                })
-            },
+            start: () => set({ phase: 'playing', startTime: Date.now() }),
 
-            restart: () => {
-                set((state) => {
-                    if (state.phase === 'playing' || state.phase === 'ended') {
-                        return { phase: 'intro' }
-                    }
-                    return {}
-                })
-            },
+            restart: () => set({ phase: 'intro' }),
 
             end: () => {
                 set((state) => {
@@ -75,7 +54,9 @@ export default create(
                         return { phase: 'ended', endTime: Date.now() }
                     return {}
                 })
-            },
+            }
+
+            
         }
     })
 )

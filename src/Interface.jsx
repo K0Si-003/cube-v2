@@ -1,7 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { useKeyboardControls } from '@react-three/drei'
 import useGame from './store/useGame.js'
+import useControls from './store/useControls.js'
 import { addEffect } from '@react-three/fiber'
+import { isMobile, isDesktop } from 'react-device-detect'
+import { Joystick } from 'react-joystick-component'
 
 const images = [
     '/images/lvl-1.png',
@@ -11,18 +14,19 @@ const images = [
     '/images/bottom.png',
 ]
 
-const preloadImages = (imageArray) => {
-    return Promise.all(
-        imageArray.map((src) => {
-            return new Promise((resolve, reject) => {
+const preloadImages = async (imagesArray) => {
+    const promises = imagesArray.map(
+        (src) =>
+            new Promise((resolve, reject) => {
                 const img = new Image()
-                img.src = src
                 img.onload = () => resolve(src)
                 img.onerror = () =>
                     reject(new Error(`Failed to load image: ${src}`))
+                img.src = src
             })
-        })
     )
+
+    await Promise.allSettled(promises)
 }
 
 export default function Interface() {
@@ -34,8 +38,8 @@ export default function Interface() {
      * Render interface / modal
      */
     const [isVisible, setIsVisible] = useState(false)
-    const [isFinishVisible, setIsModalVisible] = useState(true)
-    const [isHelpVisible, setIsHelpVisible] = useState(false)
+    const [isModalVisible, setIsModalVisible] = useState(true)
+    const [isHelpOpen, setIsHelpOpen] = useState(false)
 
     useEffect(() => {
         if (phase !== 'loading' && phase !== 'intro') {
@@ -47,7 +51,7 @@ export default function Interface() {
         }
 
         if (phase === 'intro') {
-            setIsHelpVisible(false)
+            setIsHelpOpen(false)
         }
     }, [phase])
 
@@ -67,18 +71,6 @@ export default function Interface() {
                 console.error(error)
             })
     }, [])
-
-    /**
-     * Controls
-     */
-    const forward = useKeyboardControls((state) => state.forward)
-    const backward = useKeyboardControls((state) => state.backward)
-    const leftward = useKeyboardControls((state) => state.leftward)
-    const rightward = useKeyboardControls((state) => state.rightward)
-
-    const ControlKey = ({ isActive }) => (
-        <div className={`key ${isActive ? 'active' : ''}`}>↑</div>
-    )
 
     /**
      * Level maps
@@ -108,6 +100,49 @@ export default function Interface() {
     }, [ballPosition])
 
     /**
+     * Controls
+     */
+    const ControlKey = memo(({ isActive }) => {
+        return <div className={`key${isActive ? ' active' : ''}`}>↑</div>
+    })
+
+    // Desktop with keyboard
+    const forward = useKeyboardControls((state) => state.forward)
+    const backward = useKeyboardControls((state) => state.backward)
+    const leftward = useKeyboardControls((state) => state.leftward)
+    const rightward = useKeyboardControls((state) => state.rightward)
+
+    // Mobile with joystick and click
+    const setClickControls = useControls((state) => state.setClickControls)
+    const setBoxHelper = useControls((state) => state.setBoxHelper)
+    const setLevelHelper = useControls((state) => state.setLevelHelper)
+
+    const joystickMove = useCallback((event) => {
+        switch (event.direction) {
+            case 'FORWARD':
+                setClickControls(true, false, false, false)
+                break
+            case 'RIGHT':
+                setClickControls(false, true, false, false)
+                break
+            case 'BACKWARD':
+                setClickControls(false, false, true, false)
+                break
+            case 'LEFT':
+                setClickControls(false, false, false, true)
+                break
+            default:
+                break
+        }
+    }, [])
+    const joystickStop = () => setClickControls(false, false, false, false)
+
+    const touchStartBoxHelper = () => setBoxHelper(true)
+    const touchEndBoxHelper = () => setBoxHelper(false)
+    const touchStartLevelHelper = () => setLevelHelper(true)
+    const touchEndLevelHelper = () => setLevelHelper(false)
+
+    /**
      * Timer
      */
     useEffect(() => {
@@ -122,9 +157,18 @@ export default function Interface() {
                 elapsedTime = state.endTime - state.startTime
 
             elapsedTime /= 1000
-            elapsedTime = elapsedTime.toFixed(1)
+            elapsedTime = elapsedTime.toFixed()
 
-            if (time.current) time.current.textContent = elapsedTime
+            const minutes = Math.floor(elapsedTime / 60)
+            const seconds = elapsedTime % 60
+
+            function padTo2Digits(number) {
+                return number.toString().padStart(2, '0')
+            }
+
+            const result = `${minutes}:${padTo2Digits(seconds)}`
+
+            if (time.current) time.current.textContent = result
         })
 
         return () => {
@@ -134,9 +178,9 @@ export default function Interface() {
 
     return (
         <>
-            <div className={`interface${isVisible ? ' visible' : ''}`}>
+            <div className={`interface${isVisible ? '--visible' : ''}`}>
                 {/* Map */}
-                <div className="map">
+                <div className="interface__map">
                     {images.map((image, index) => {
                         return (
                             <img
@@ -144,83 +188,160 @@ export default function Interface() {
                                 key={image}
                                 src={image}
                                 alt="map"
-                                className={`map--level${
-                                    activLevel === index ? ' active' : ''
+                                className={`map__level${
+                                    activLevel === index ? '--active' : ''
                                 }`}
                             />
                         )
                     })}
                 </div>
 
+                {/* Controls */}
+                <div className="interface__controls">
+                    {isDesktop && (
+                        <div className="controls_keys">
+                            <div className="row">
+                                <ControlKey isActive={forward} />
+                            </div>
+                            <div className="row">
+                                <ControlKey isActive={leftward} />
+                                <ControlKey isActive={backward} />
+                                <ControlKey isActive={rightward} />
+                            </div>
+                        </div>
+                    )}
+                    {isMobile && (
+                        <div className="controls__joystick">
+                            <Joystick
+                                baseColor={'#283739'}
+                                stickColor={'#a9c52f'}
+                                size={90}
+                                stickSize={55}
+                                baseShape="square"
+                                throttle={100}
+                                move={joystickMove}
+                                stop={joystickStop}
+                            />
+                        </div>
+                    )}
+                </div>
+
                 {/* Time */}
-                <div ref={time} className="time">
+                <div ref={time} className="interface__time">
                     0.00
-                </div>
-
-                {/* Help */}
-                <div
-                    className="help"
-                    onClick={() => setIsHelpVisible(!isHelpVisible)}
-                >
-                    ?
-                </div>
-
-                <div
-                    className={`help--modal${isHelpVisible ? ' visible' : ''}`}
-                >
-                    <div className="text">
-                        <h3>Helpers</h3>
-                        <p>
-                            Hard to find your way around ? You can use a helper :
-                        </p>
-                        <ul>
-                            <li>Press Left Shift Key to make the cube transparent</li>
-                            <li>Press Left Control Key to see the levels in wireframe</li>
-                        </ul>
-                        <p>Don't overuse it !</p>
-                        <h3>Controls</h3>
-                        <p>Use arrows or WASD keys to rotate the cube.</p>
-                    </div>
-                    <button
-                        className="btn--small"
-                        onClick={() => setIsHelpVisible(false)}
-                    >
-                        Close
-                    </button>
                 </div>
 
                 {/* Restart */}
                 {(phase === 'ended' || phase === 'playing') && (
-                    <div className="restart" onClick={restart}>
+                    <div className="interface__restart" onClick={restart}>
                         Restart
                     </div>
                 )}
 
-                {/* Controls */}
-                <div className="controls">
-                    <div className="raw">
-                        <ControlKey isActive={forward} />
-                    </div>
-                    <div className="raw">
-                        <ControlKey isActive={leftward} />
-                        <ControlKey isActive={backward} />
-                        <ControlKey isActive={rightward} />
-                    </div>
+                {/* Credits */}
+                <div className="interface__credits">
+                    <span className="credits__text">
+                        Inspired by INSIDE³ Cube
+                    </span>
+                    <span className="credits__dash">-</span>
+                    <span className="credits__text">
+                        Made by{' '}
+                        <a
+                            href="https://github.com/K0Si-003"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            Kosi
+                        </a>
+                    </span>
                 </div>
 
-                {/* Credits */}
-                <div className="credits">
-                    <p>Inspired by INSIDE³ Cube - Made by Kosi</p>
+                {/* Help */}
+                <div className="interface__help">
+                    <button
+                        className="help__button"
+                        onClick={() => setIsHelpOpen(!isHelpOpen)}
+                    >
+                        ?
+                    </button>
+                    {isMobile && (
+                        <div className="help__button--mobile">
+                            <div
+                                className="help__box"
+                                onTouchStart={touchStartBoxHelper}
+                                onTouchEnd={touchEndBoxHelper}
+                            >
+                                <img
+                                    className="box__img"
+                                    src="./images/icon-box.png"
+                                    alt="Green box icon with perspective"
+                                    draggable="false"
+                                />
+                            </div>
+                            <div
+                                className="help__level"
+                                onTouchStart={touchStartLevelHelper}
+                                onTouchEnd={touchEndLevelHelper}
+                            >
+                                <img
+                                    className="level__img"
+                                    src="./images/icon-level.png"
+                                    alt="Level icon with perspective"
+                                />
+                            </div>
+                        </div>
+                    )}
+
+                    <div
+                        className={`help__modal${
+                            isHelpOpen ? '--visible' : ''
+                        }`}
+                    >
+                        <div className="modal__content">
+                            <h3>Helpers</h3>
+                            <p>
+                                Hard to find your way around ? You can use a
+                                helper :
+                            </p>
+                            <ul>
+                                <li>
+                                    {isMobile
+                                        ? 'Touch the box icon to make the cube transparent'
+                                        : 'Press Left Shift Key to make the cube transparent'}
+                                </li>
+                                <li>
+                                    {isMobile
+                                        ? 'Touch the level icon to see levels in wireframe'
+                                        : 'Press Left Control Key to see the levels in wireframe'}
+                                </li>
+                            </ul>
+                            <p>Don't overuse it !</p>
+                            <h3>Controls</h3>
+                            <p>
+                                {isMobile
+                                    ? 'Use the joystick to rotate the cube'
+                                    : 'Use arrows or WASD keys to rotate the cube.'}
+                            </p>
+                        </div>
+                        <button
+                            className="btn--small"
+                            onClick={() => setIsHelpOpen(false)}
+                        >
+                            Close
+                        </button>
+                    </div>
                 </div>
 
                 {/* Pop-up Finish */}
                 {phase === 'ended' && (
                     <div
-                        className={`finish${isFinishVisible ? ' visible' : ''}`}
+                        className={`interface__finish${
+                            isModalVisible ? '--visible' : ''
+                        }`}
                     >
-                        <p className="text">
-                            Congrats ! You did it 😉! You can retry for a better
-                            time or the reverse path.
+                        <p className="finish__text">
+                            Congrats 🎉! You did it 😉! You can retry for a
+                            better time or the reverse path.
                         </p>
                         <button
                             className="btn--small"

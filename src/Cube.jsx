@@ -5,6 +5,8 @@ import { useEffect, useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
 import gsap from 'gsap'
 import useGame from './store/useGame.js'
+import useControls from './store/useControls.js'
+import { isDesktop, isMobile } from 'react-device-detect'
 
 export default function Cube() {
     /**
@@ -28,6 +30,13 @@ export default function Cube() {
     const ready = useGame((state) => state.ready)
     const start = useGame((state) => state.start)
     const end = useGame((state) => state.end)
+
+    const { forward: forwardStore, rightward: rightwardStore, backward: backwardStore, leftward: leftwardStore } = useControls()
+
+    const boxHelper = useControls((state) => state.boxHelper)
+    const levelHelper = useControls((state) => state.levelHelper)
+    const setBoxHelper = useControls((state) => state.setBoxHelper)
+    const setLevelHelper = useControls((state) => state.setLevelHelper)
 
     // Enter animation state
     const [isAnimationFinished, setIsAnimationFinished] = useState(false)
@@ -72,10 +81,10 @@ export default function Cube() {
                 if (value === 'intro') {
                     setIsAnimationFinished(false)
                     resetCube()
-                }   
+                }
             }
         )
-    
+
         if (phase === 'intro') {
             // Top
             tl.current.from(
@@ -107,7 +116,7 @@ export default function Cube() {
                 { duration: 3, y: -Math.PI * 0.5, ease: 'slow(0.7,0.7,false)' },
                 0.5
             )
-    
+
             // Level 3
             tl.current.from(
                 meshes.current[3].current.position,
@@ -119,7 +128,7 @@ export default function Cube() {
                 { duration: 3, y: Math.PI * 0.5, ease: 'slow(0.7,0.7,false)' },
                 1
             )
-    
+
             // Level 4
             tl.current.from(
                 meshes.current[4].current.position,
@@ -131,7 +140,7 @@ export default function Cube() {
                 { duration: 3, y: -Math.PI * 0.5, ease: 'slow(0.7,0.7,false)' },
                 1.5
             )
-    
+
             // Bottom
             tl.current.from(
                 meshes.current[5].current.position,
@@ -157,7 +166,6 @@ export default function Cube() {
             tl.current.kill() // Clean timeline
             unsubscribeReset()
         }
-        
     }, [phase])
 
     /**
@@ -212,26 +220,31 @@ export default function Cube() {
             }
 
             // Rotate cube depending keys pressed
-            if (forward) updateRotation('x', -1)
-            if (backward) updateRotation('x', 1)
-            if (leftward) updateRotation('z', 1)
-            if (rightward) updateRotation('z', -1)
-
-            /**
-             * Helpers
-             */
-            // // Set boxMaterial transparent
-            if (transparent) {
-                setTransparency(true)
-            } else {
-                setTransparency(false)
+            if (isDesktop) {
+                if (forward) updateRotation('x', -1)
+                if (backward) updateRotation('x', 1)
+                if (leftward) updateRotation('z', 1)
+                if (rightward) updateRotation('z', -1)
             }
 
-            // // Set levelMaterial wireframe
-            if (wireframe) {
-                setIsWireframe(true)
-            } else {
-                setIsWireframe(false)
+            if (isMobile) {
+                if (forwardStore) updateRotation('x', -1)
+                if (backwardStore) updateRotation('x', 1)
+                if (leftwardStore) updateRotation('z', 1)
+                if (rightwardStore) updateRotation('z', -1)
+            }
+
+            /**
+             * Helpers for cube transparency and levels wireframe
+             */
+            if (isDesktop) {
+                setTransparency(transparent)
+                setIsWireframe(wireframe)
+            }
+
+            if (isMobile) {
+                setTransparency(boxHelper)
+                setIsWireframe(levelHelper)
             }
         }
     })

@@ -1,0 +1,32 @@
+// Outfit normal
+@font-face {
+    font-family: 'Outfit';
+    src: url('/fonts/Outfit-Regular.woff2') format('woff2'),
+        url('/fonts/Outfit-Regular.woff2') format('woff'),
+        url('/fonts/Outfit-Regular.woff2ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+// Outfit light
+@font-face {
+    font-family: 'Outfit';
+    src: url('/fonts/Outfit-Light.woff2') format('woff2'),
+        url('/fonts/Outfit-Light.woff') format('woff'),
+        url('/fonts/Outfit-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+// Outfit bold
+@font-face {
+    font-family: 'Outfit';
+    src: url('/fonts/Outfit-Bold.woff2') format('woff2'),
+        url('/fonts/Outfit-Bold.woff') format('woff'),
+        url('/fonts/Outfit-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}

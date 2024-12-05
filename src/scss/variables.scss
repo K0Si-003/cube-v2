@@ -1,0 +1,32 @@
+// ----------------
+// Breakpoints
+// ----------------
+
+$breakpoints: (
+  sm: 576px,
+  md: 992px,
+  lg: 1330px,
+) !default;
+
+$small: map-get($breakpoints, sm) !default;
+$medium: map-get($breakpoints, md) !default;
+$large: map-get($breakpoints, lg) !default;
+
+
+// ----------------
+// Colors
+// ----------------
+
+$green-color: #a9c52f;
+$dark-color: #283739;
+$second-dark-color: #2c5d63;
+$light-color: #f5f5f5;
+
+
+// ----------------
+// Fonts
+// ----------------
+
+$font-fallback: BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;

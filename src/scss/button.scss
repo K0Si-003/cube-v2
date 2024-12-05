@@ -1,0 +1,44 @@
+[class*='btn'] {
+    display: block;
+    width: 100px;
+    height: 100px;
+    font-size: 1.5rem;
+    font-weight: 300;
+    text-transform: uppercase;
+    text-align: center;
+    letter-spacing: -1px;
+    color: $dark-color;
+    background: $green-color;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 0 0 0 rgba($green-color, 0.5);
+    animation: pulse 1.5s infinite;
+
+    &:hover,
+    &:focus,
+    &:active {
+        animation: none;
+    }
+}
+
+@keyframes pulse {
+  0% {
+      transform: (scale(0.975));
+  }
+  70% {
+      transform: (scale(1));
+      box-shadow: 0 0 10px 20px rgba($green-color, 0);
+  }
+  100% {
+      transform: (scale(0.975));
+      box-shadow: 0 0 0 0 rgba($green-color, 0);
+  }
+}
+
+.btn--small {
+  width: 60px;
+  height: 60px;
+  font-size: 1.1rem;
+}
+
