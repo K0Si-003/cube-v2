@@ -3,6 +3,7 @@ import { useProgress } from '@react-three/drei'
 import useGame from './store/useGame.js'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
+import { isMobile } from 'react-device-detect'
 
 export default function Overlay() {
     const [isLoaded, setIsLoaded] = useState(false)
@@ -78,7 +79,7 @@ export default function Overlay() {
                 </p>
                 <h2 className="rules__title">Controls</h2>
                 <p className="rules__text">
-                    Use arrows or WASD keys to rotate the cube.
+                    {isMobile ? 'Use the joystick to rotate the cube.' : 'Use arrows or WASD keys to rotate the cube.'}
                 </p>
                 <button className="rules__btn" onClick={handleButtonStart}>
                     Start
