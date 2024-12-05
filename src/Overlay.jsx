@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useProgress } from '@react-three/drei'
 import useGame from './store/useGame.js'
+import gsap from 'gsap'
+import { useGSAP } from '@gsap/react'
 
 export default function Overlay() {
     const [isLoaded, setIsLoaded] = useState(false)
@@ -13,13 +15,13 @@ export default function Overlay() {
     const imagesLoaded = useGame((state) => state.imagesLoaded) // loading for map images
     const intro = useGame((state) => state.intro) // set phase to intro
 
-    const [loadingProgress, setLoadingProgress] = useState(25)
+    const [loadingProgress, setLoadingProgress] = useState(0)
     const [hasIncrementedImagesLoaded, setHasIncrementedImagesLoaded] = useState(false)
     const [hasIncrementedProgress, setHasIncrementedProgress] = useState(false)
 
     useEffect(() => {
         if (imagesLoaded && !hasIncrementedImagesLoaded) {
-            setLoadingProgress((prev) => prev + 25)
+            setLoadingProgress((prev) => prev + 50)
             setHasIncrementedImagesLoaded(true)
         }
     }, [imagesLoaded, hasIncrementedImagesLoaded])
@@ -45,6 +47,19 @@ export default function Overlay() {
             intro()
         }
     }
+
+    /**
+     * Completed animation
+     */
+    useGSAP(() => {
+        if (isCompleted) {
+            return gsap.to('.overlay--completed', {
+                opacity: 0,
+                duration: 2,
+                ease: 'sine.in'
+            })
+        }
+    }, [isCompleted])
 
     return (
         <div className={`overlay${isCompleted ? '--completed' : ''}`}>
