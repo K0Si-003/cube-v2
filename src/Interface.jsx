@@ -31,6 +31,7 @@ const preloadImages = async (imagesArray) => {
 
 export default function Interface() {
     const time = useRef()
+    const fullscreen = useRef()
     const phase = useGame((state) => state.phase)
     const restart = useGame((state) => state.restart)
 
@@ -176,6 +177,19 @@ export default function Interface() {
         }
     }, [])
 
+    /**
+     * Fullscreen toggle
+     */
+    const fullscreenToggle = useCallback(() => {
+        if (document.fullscreenElement) {
+            fullscreen.current.src = '/images/fullscreen.svg'
+            document.exitFullscreen()
+        } else {
+            fullscreen.current.src = 'images/fullscreen-exit.svg'
+            document.documentElement.requestFullscreen()
+        }
+    }, [])
+
     return (
         <>
             <div className={`interface${isVisible ? '--visible' : ''}`}>
@@ -275,7 +289,6 @@ export default function Interface() {
                                     className="box__img"
                                     src="./images/icon-box.png"
                                     alt="Green box icon with perspective"
-                                    draggable="false"
                                 />
                             </div>
                             <div
@@ -330,6 +343,16 @@ export default function Interface() {
                             Close
                         </button>
                     </div>
+                </div>
+
+                {/* Fullscreen */}
+                <div className="interface__fullscreen">
+                    <img
+                        ref={fullscreen}
+                        src='images/fullscreen.svg'
+                        className="fullscreen__img"
+                        onClick={fullscreenToggle}
+                    />
                 </div>
 
                 {/* Pop-up Finish */}
