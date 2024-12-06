@@ -170,7 +170,7 @@
     .help__button {
         position: absolute;
         right: 0;
-        bottom: 15%;
+        bottom: 20%;
         color: $light-color;
         font-size: 1.8rem;
         background: #00000030;
@@ -191,7 +191,7 @@
             width: 15%;
             left: 0;
             padding: 5px 15px;
-            bottom: 13%;
+            bottom: 15%;
             border: 2px solid $light-color;
             border-radius: 0 5px 5px 0;
             border-left: none;
@@ -226,7 +226,7 @@
     }
 
     .help__level {
-        bottom: 8%;
+        bottom: 5%;
     }
 
     .help__modal {
@@ -269,6 +269,48 @@
             @include respond-to('small') {
                 width: 80%;
             }
+        }
+    }
+}
+
+.interface__fullscreen {
+    position: absolute;
+    width: fit-content;
+    right: 0;
+    top: 15%;
+    background: #00000030;
+    border: 2px solid $light-color;
+    border-right: none;
+    padding: 7px 30px 4px 30px;
+    border-radius: 5px 0 0 5px;
+    pointer-events: auto;
+    cursor: pointer;
+
+    &:active {
+        color: $green-color;
+        border-color: $green-color;
+
+        .fullscreen__img {
+            filter: invert(58%) sepia(98%) saturate(320%) hue-rotate(31deg) brightness(104%) contrast(90%);
+        }
+    }
+
+    .fullscreen__img {
+        width: 3rem;
+        user-select: none;
+    }
+
+    @include respond-to('small') {
+        bottom: 5%;
+        top: auto;
+        left: 0;
+        border: 2px solid $light-color;
+        border-left: none;
+        padding: 4px 10px 0px 10px;
+        border-radius: 0 5px 5px 0;
+
+        .fullscreen__img {
+            width: 2rem;
         }
     }
 }
