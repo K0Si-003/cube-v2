@@ -1,11 +1,11 @@
 import './index.scss'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import Experience from './Experience.jsx'
+import Experience from './components/Experience.jsx'
 import { Canvas } from '@react-three/fiber'
 import { KeyboardControls } from '@react-three/drei'
-import Interface from './Interface.jsx'
-import Overlay from './Overlay.jsx'
+import Interface from './components/Interface.jsx'
+import Overlay from './components/Overlay.jsx'
 
 const root = ReactDOM.createRoot(document.querySelector('#root'))
 

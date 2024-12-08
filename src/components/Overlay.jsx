@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useProgress } from '@react-three/drei'
-import useGame from './store/useGame.js'
+import useGame from '../store/useGame.js'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import { isMobile } from 'react-device-detect'

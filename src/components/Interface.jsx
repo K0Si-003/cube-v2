@@ -1,7 +1,7 @@
 import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { useKeyboardControls } from '@react-three/drei'
-import useGame from './store/useGame.js'
-import useControls from './store/useControls.js'
+import useGame from '../store/useGame.js'
+import useControls from '../store/useControls.js'
 import { addEffect } from '@react-three/fiber'
 import { isMobile, isDesktop } from 'react-device-detect'
 import { Joystick } from 'react-joystick-component'
@@ -15,19 +15,17 @@ const images = [
 ]
 
 const preloadImages = async (imagesArray) => {
-    const promises = imagesArray.map(
-        (src) =>
-            new Promise((resolve, reject) => {
-                const img = new Image()
-                img.onload = () => resolve(src)
-                img.onerror = () =>
-                    reject(new Error(`Failed to load image: ${src}`))
-                img.src = src
-            })
-    )
-
-    await Promise.allSettled(promises)
-}
+    try {
+      await Promise.all(imagesArray.map(src => new Promise((resolve, reject) => {
+        const img = new Image()
+        img.onload = resolve
+        img.onerror = () => reject(new Error(`Failed to load image: ${src}`))
+        img.src = src
+      })))
+    } catch (error) {
+      console.error('Error preloading images:', error)
+    }
+  }
 
 export default function Interface() {
     const time = useRef()
@@ -136,6 +134,7 @@ export default function Interface() {
                 break
         }
     }, [])
+    
     const joystickStop = () => setClickControls(false, false, false, false)
 
     const touchStartBoxHelper = () => setBoxHelper(true)
