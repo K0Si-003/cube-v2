@@ -1,14 +1,12 @@
-import { ContactShadows, OrbitControls } from '@react-three/drei'
 import { Physics } from '@react-three/rapier'
 import Lights from './Lights.jsx'
 import Cube from './Cube.jsx'
 import Ball from './Ball.jsx'
-import { Perf } from 'r3f-perf'
+import { ContactShadows } from '@react-three/drei'
 
 export default function Experience() {
     return (
-        <Physics debug={false}>
-            {/* <OrbitControls makeDefault /> */}
+        <Physics>
             <Lights />
             <Cube />
             <Ball />

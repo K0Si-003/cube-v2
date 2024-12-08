@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { RigidBody } from '@react-three/rapier'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
-import useGame from './store/useGame.js'
+import useGame from '../store/useGame.js'
 import { gsap } from 'gsap'
 import { isDesktop, isMobile } from 'react-device-detect'
 

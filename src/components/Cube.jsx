@@ -4,13 +4,13 @@ import { RigidBody } from '@react-three/rapier'
 import { useEffect, useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
 import gsap from 'gsap'
-import useGame from './store/useGame.js'
-import useControls from './store/useControls.js'
+import useGame from '../store/useGame.js'
+import useControls from '../store/useControls.js'
 import { isDesktop, isMobile } from 'react-device-detect'
 
 export default function Cube() {
     /**
-     * Import/Assign Meshes
+     * Import/Assign Meshes and state for the component
      */
     const { nodes } = useGLTF('./meshes/cube.glb')
     const cubeArray = Object.values(nodes).slice(1)
@@ -18,28 +18,23 @@ export default function Cube() {
     const cube = useRef([]) // ref for cube rotation
     const meshes = useRef(cubeArray.map(() => useRef())) // ref for meshes enter animation
 
-    const [subscribeKeys, getKeys] = useKeyboardControls()
     const [transparency, setTransparency] = useState(false)
     const [isWireframe, setIsWireframe] = useState(false)
+    const [isAnimationFinished, setIsAnimationFinished] = useState(false)
 
-    /**
-     * Phases
-     */
     // Store
     const phase = useGame((state) => state.phase)
     const ready = useGame((state) => state.ready)
     const start = useGame((state) => state.start)
     const end = useGame((state) => state.end)
-
-    const { forward: forwardStore, rightward: rightwardStore, backward: backwardStore, leftward: leftwardStore } = useControls()
-
+    const {
+        forward: forwardStore,
+        rightward: rightwardStore,
+        backward: backwardStore,
+        leftward: leftwardStore,
+    } = useControls()
     const boxHelper = useControls((state) => state.boxHelper)
     const levelHelper = useControls((state) => state.levelHelper)
-    const setBoxHelper = useControls((state) => state.setBoxHelper)
-    const setLevelHelper = useControls((state) => state.setLevelHelper)
-
-    // Enter animation state
-    const [isAnimationFinished, setIsAnimationFinished] = useState(false)
 
     /**
      * Material
@@ -171,6 +166,8 @@ export default function Cube() {
     /**
      * Controls
      */
+    const [subscribeKeys, getKeys] = useKeyboardControls()
+
     useFrame((state, delta) => {
         // Getkeys state for controls
         const {
@@ -227,6 +224,7 @@ export default function Cube() {
                 if (rightward) updateRotation('z', -1)
             }
 
+            // Rotate cube depending joystick
             if (isMobile) {
                 if (forwardStore) updateRotation('x', -1)
                 if (backwardStore) updateRotation('x', 1)
